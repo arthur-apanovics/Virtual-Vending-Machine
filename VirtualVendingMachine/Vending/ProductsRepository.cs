@@ -1,30 +1,30 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using VirtualVendingMachine.Entities;
 
 namespace VirtualVendingMachine.Vending;
 
 public class ProductsRepository
 {
-    private readonly List<CokeProduct> _cokeProducts;
-    private readonly List<JuiceProduct> _juiceProducts;
-    private readonly List<ChocolateBarProduct> _chocolateBarProducts;
+    private readonly Dictionary<Type, int> _stock;
 
     public ProductsRepository()
     {
-        _cokeProducts = Enumerable.Repeat(new CokeProduct(), 10).ToList();
-        _juiceProducts = Enumerable.Repeat(new JuiceProduct(), 9).ToList();
-        _chocolateBarProducts =
-            Enumerable.Repeat(new ChocolateBarProduct(), 8).ToList();
+        _stock = new Dictionary<Type, int>
+        {
+            {typeof(CokeProduct), 10},
+            {typeof(JuiceProduct), 9},
+            {typeof(ChocolateBarProduct), 8},
+        };
     }
 
     public IEnumerable<(VendingProduct product, int quantity)> ListStock()
     {
         return new (VendingProduct, int)[]
         {
-            (new CokeProduct(), _cokeProducts.Count),
-            (new JuiceProduct(), _juiceProducts.Count),
-            (new ChocolateBarProduct(), _chocolateBarProducts.Count),
+            (new CokeProduct(), _stock[typeof(CokeProduct)]),
+            (new JuiceProduct(), _stock[typeof(JuiceProduct)]),
+            (new ChocolateBarProduct(), _stock[typeof(ChocolateBarProduct)]),
         };
     }
 }
