@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace VirtualVendingMachine.Vending;
 
 public class ProductsRepository
 {
-    private readonly Dictionary<VendingProduct, int> _stock;
+    private readonly ImmutableDictionary<VendingProduct, int> _stock;
+    private readonly ImmutableDictionary<VendingProduct, int> _pricing;
 
     public ProductsRepository()
     {
@@ -14,7 +16,14 @@ public class ProductsRepository
             { VendingProduct.Coke, 10 },
             { VendingProduct.Juice, 9 },
             { VendingProduct.ChocolateBar, 8 },
-        };
+        }.ToImmutableDictionary();
+
+        _pricing = new Dictionary<VendingProduct, int>
+        {
+            { VendingProduct.Coke, 180 },
+            { VendingProduct.Juice, 220 },
+            { VendingProduct.ChocolateBar, 300 },
+        }.ToImmutableDictionary();
     }
 
     public IEnumerable<(VendingProduct product, int quantity)> ListStock()
@@ -39,16 +48,13 @@ public class ProductsRepository
 
     public int GetPriceFor(VendingProduct product)
     {
-        return product switch
-        {
-            VendingProduct.Coke => 180,
-            VendingProduct.Juice => 220,
-            VendingProduct.ChocolateBar => 300,
-            _ => throw new ArgumentOutOfRangeException(
+        if (!_pricing.ContainsKey(product))
+            throw new ArgumentOutOfRangeException(
                 nameof(product),
                 product,
                 $"No price found for \"{product}\""
-            )
-        };
+            );
+
+        return _pricing[product];
     }
 }
