@@ -14,7 +14,7 @@ public class ListStockTests
     public void ReturnsExpectedAvailableProducts()
     {
         // Arrange
-        var repository = new ProductsRepository();
+        var repository = new VendingProductsRepository();
 
         // Act
         var actual = repository.ListStock();

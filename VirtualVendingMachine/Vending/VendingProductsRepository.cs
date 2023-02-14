@@ -4,12 +4,12 @@ using System.Collections.Immutable;
 
 namespace VirtualVendingMachine.Vending;
 
-public class ProductsRepository
+public class VendingProductsRepository
 {
     private readonly ImmutableDictionary<VendingProduct, int> _stock;
     private readonly ImmutableDictionary<VendingProduct, int> _pricing;
 
-    public ProductsRepository()
+    public VendingProductsRepository()
     {
         _stock = new Dictionary<VendingProduct, int>
         {

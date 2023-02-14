@@ -16,7 +16,7 @@ public class GetPriceForTests
     )
     {
         // Arrange
-        var repository = new ProductsRepository();
+        var repository = new VendingProductsRepository();
 
         // Act
         var actual = repository.GetPriceFor(product);
@@ -33,7 +33,7 @@ public class GetPriceForTests
     public void HasPriceForAllProducts(VendingProduct product)
     {
         // Arrange
-        var repository = new ProductsRepository();
+        var repository = new VendingProductsRepository();
 
         // Act
         var actual = repository.GetPriceFor(product);

@@ -14,7 +14,7 @@ public class GetStockForTests
     public void ReturnsPositiveValue(VendingProduct product)
     {
         // Arrange
-        var repository = new ProductsRepository();
+        var repository = new VendingProductsRepository();
 
         // Act
         var actual = repository.GetStockFor(product);
