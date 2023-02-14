@@ -27,4 +27,13 @@ public class ProductsRepository
                 _stock[VendingProduct.ChocolateBar]),
         };
     }
+
+    public int GetStockFor(VendingProduct product)
+    {
+        return _stock.ContainsKey(product)
+            ? _stock[product]
+            : throw new ArgumentOutOfRangeException(
+                $"No stock exists for \"{product}\""
+            );
+    }
 }
