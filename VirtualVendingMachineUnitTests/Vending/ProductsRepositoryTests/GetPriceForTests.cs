@@ -19,9 +19,26 @@ public class GetPriceForTests
         var repository = new ProductsRepository();
 
         // Act
-        int actual = repository.GetPriceFor(product);
+        var actual = repository.GetPriceFor(product);
 
         // Assert
         actual.Should().Be(expectedPrice);
+    }
+
+    [Theory]
+    [MemberData(
+        nameof(TestDataProviders.VendingProducts),
+        MemberType = typeof(TestDataProviders)
+    )]
+    public void HasPriceForAllProducts(VendingProduct product)
+    {
+        // Arrange
+        var repository = new ProductsRepository();
+
+        // Act
+        var actual = repository.GetPriceFor(product);
+
+        // Assert
+        actual.Should().BePositive();
     }
 }

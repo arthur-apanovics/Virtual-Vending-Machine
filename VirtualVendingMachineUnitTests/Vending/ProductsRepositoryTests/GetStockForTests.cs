@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using VirtualVendingMachine.Vending;
 using Xunit;
@@ -10,7 +7,10 @@ namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 public class GetStockForTests
 {
     [Theory]
-    [MemberData(nameof(VendingProducts))]
+    [MemberData(
+        nameof(TestDataProviders.VendingProducts),
+        MemberType = typeof(TestDataProviders)
+    )]
     public void ReturnsPositiveValue(VendingProduct product)
     {
         // Arrange
@@ -22,8 +22,4 @@ public class GetStockForTests
         // Assert
         actual.Should().BePositive();
     }
-
-    public static IEnumerable<object[]> VendingProducts() =>
-        Enum.GetValues<VendingProduct>()
-            .Select(product => new object[] { product });
 }
