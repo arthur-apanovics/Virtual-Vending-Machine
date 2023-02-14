@@ -36,4 +36,19 @@ public class ProductsRepository
                 $"No stock exists for \"{product}\""
             );
     }
+
+    public int GetPriceFor(VendingProduct product)
+    {
+        return product switch
+        {
+            VendingProduct.Coke => 180,
+            VendingProduct.Juice => 220,
+            VendingProduct.ChocolateBar => 300,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(product),
+                product,
+                $"No price found for \"{product}\""
+            )
+        };
+    }
 }
