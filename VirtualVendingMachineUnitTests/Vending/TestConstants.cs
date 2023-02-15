@@ -26,7 +26,10 @@ public static class TestConstants
         {
             10, 20, 50, 100, 200
         };
+    }
 
+    public static class VendingDispenser
+    {
         public static readonly Coin[] DefaultChangeBank = Array.Empty<Coin>()
             .Concat(Enumerable.Repeat(Coin.Create(10), 30))
             .Concat(Enumerable.Repeat(Coin.Create(15), 20))

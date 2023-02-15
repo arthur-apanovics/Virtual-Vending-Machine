@@ -1,21 +1,13 @@
 using System;
 using FluentAssertions;
-using NSubstitute;
 using VirtualVendingMachine.Tills;
-using VirtualVendingMachine.Vending;
+using VirtualVendingMachineUnitTests.Builders;
 using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
 public class InsertedCoinTests
 {
-    private readonly IVendingProductsRepository _productsRepository;
-
-    public InsertedCoinTests()
-    {
-        _productsRepository = Substitute.For<IVendingProductsRepository>();
-    }
-
     [Theory]
     [MemberData(
         nameof(TestDataProviders.AcceptedCoins),
@@ -24,7 +16,7 @@ public class InsertedCoinTests
     public void AcceptsSupportedCoinValues(Coin coin)
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build();
         var expectedCoins = new[] { coin };
 
         // Act
@@ -38,7 +30,7 @@ public class InsertedCoinTests
     public void ThrowsForUnsupportedCoinValues()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build();
 
         // Act
         var actual = () => dispenser.InsertCoin(Coin.Create(123));
@@ -51,7 +43,7 @@ public class InsertedCoinTests
     public void AccumulatesInsertedCoins()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build();
 
         // Act
         dispenser.InsertCoin(Coin.Create(10));

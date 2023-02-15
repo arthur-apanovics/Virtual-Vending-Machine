@@ -2,6 +2,7 @@ using FluentAssertions;
 using NSubstitute;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
+using VirtualVendingMachineUnitTests.Builders;
 using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
@@ -24,7 +25,7 @@ public class DispenseTests
     public void DispensesProductWhenPaidForInFull()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build(_productsRepository);
         var expectedResult = new DispenseResult(
             ProductUnderTest.ToString(),
             PriceForProductUnderTest,
@@ -44,7 +45,7 @@ public class DispenseTests
     public void ResetsInsertedCoinsAfterDispensing()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build(_productsRepository);
 
         // Act
         FillCoinHolderWIthRequiredAmount(dispenser);
@@ -60,7 +61,7 @@ public class DispenseTests
     public void ReturnsCorrectChange()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build(_productsRepository);
         const int overfillAmount = 50;
 
         // Act
@@ -76,7 +77,7 @@ public class DispenseTests
     public void ThrowsWhenAttemptingToDispenseWithInsufficientFunds()
     {
         // Arrange
-        var dispenser = new VendingDispenser(_productsRepository);
+        var dispenser = VendingDispenserBuilder.Build(_productsRepository);
 
         // hard-coded values to avoid invoking business logic
         var insertedCoin = Coin.Create(10);
@@ -100,7 +101,9 @@ public class DispenseTests
             .WithMessage(expectedMessage);
     }
 
-    private static void FillCoinHolderWIthRequiredAmount(VendingDispenser dispenser)
+    private static void FillCoinHolderWIthRequiredAmount(
+        VendingDispenser dispenser
+    )
     {
         do dispenser.InsertCoin(Coin.Create(10));
         while (dispenser.InsertedAmountInCents < PriceForProductUnderTest);

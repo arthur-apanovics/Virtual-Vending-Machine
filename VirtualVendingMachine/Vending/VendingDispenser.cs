@@ -17,12 +17,17 @@ public class VendingDispenser
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
     private readonly IVendingProductsRepository _productsRepository;
+    private readonly CoinTill _coinTill;
     private readonly List<Coin> _insertedCoins = new();
 
 
-    public VendingDispenser(IVendingProductsRepository productsRepository)
+    public VendingDispenser(
+        IVendingProductsRepository productsRepository,
+        IEnumerable<Coin> changeBank
+    )
     {
         _productsRepository = productsRepository;
+        _coinTill = new CoinTill(changeBank);
     }
 
     public void InsertCoin(Coin coin)
@@ -47,7 +52,7 @@ public class VendingDispenser
     {
         for (var i = 0; i < _insertedCoins.Count; i++)
         {
-            // _coinTill.Store(_insertedCoins[i]);
+            _coinTill.Add(_insertedCoins[i]);
             _insertedCoins.RemoveAt(i);
         }
     }
