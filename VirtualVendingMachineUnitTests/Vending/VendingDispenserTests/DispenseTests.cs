@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
+using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
 using VirtualVendingMachineUnitTests.Builders;
