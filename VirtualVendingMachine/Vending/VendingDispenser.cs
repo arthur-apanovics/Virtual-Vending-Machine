@@ -50,6 +50,14 @@ public class VendingDispenser
         return new DispenseResult(product.ToString(), productCost, change.Sum());
     }
 
+    public IEnumerable<Coin> CancelAndRefund()
+    {
+        var refund = _insertedCoins.ToArray();
+        _insertedCoins.Clear();
+
+        return refund;
+    }
+
     private void TransferInsertedCoinsToTill()
     {
         _coinTill.Add(_insertedCoins);

@@ -19,6 +19,7 @@ public readonly struct Coin
 
     public int ValueInCents { get; }
 
+    // TODO: create10, create20, etc.
     public static Coin Create(int value) => new(value);
 
     public override string ToString() =>
