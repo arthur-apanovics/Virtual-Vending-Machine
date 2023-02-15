@@ -24,11 +24,11 @@ public class DispenseTests
     {
         // Arrange
         var dispenser = new VendingDispenser(_productsRepository);
-        var expectedResult = new
-        {
-            ProductName = ProductUnderTest.ToString(),
-            ProductPrice = PriceForProductUnderTest
-        };
+        var expectedResult = new DispenseResult(
+            ProductUnderTest.ToString(),
+            PriceForProductUnderTest,
+            Change: 0
+        );
 
         // Act
         FillTillWIthRequiredAmount(dispenser);
@@ -51,6 +51,23 @@ public class DispenseTests
 
         // Assert
         dispenser.GetCurrentTillAmount().Should().Be(0);
+    }
+
+
+    [Fact]
+    public void ReturnsCorrectChange()
+    {
+        // Arrange
+        var dispenser = new VendingDispenser(_productsRepository);
+        const int overfillAmount = 50;
+
+        // Act
+        FillTillWIthRequiredAmount(dispenser);
+        dispenser.InsertCoin(overfillAmount);
+        var result = dispenser.Dispense(ProductUnderTest);
+
+        // Assert
+        result.Change.Should().Be(overfillAmount);
     }
 
     [Fact]
