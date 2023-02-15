@@ -7,9 +7,12 @@ namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 public class GetPriceForTests
 {
     [Theory]
-    [InlineData(VendingProduct.Coke, 180)]
-    [InlineData(VendingProduct.Juice, 220)]
-    [InlineData(VendingProduct.ChocolateBar, 300)]
+    [InlineData(VendingProduct.Coke, TestConstants.Pricing.Coke)]
+    [InlineData(VendingProduct.Juice, TestConstants.Pricing.Juice)]
+    [InlineData(
+        VendingProduct.ChocolateBar,
+        TestConstants.Pricing.ChocolateBar
+    )]
     public void ReturnsExpectedPriceForProduct(
         VendingProduct product,
         int expectedPrice
