@@ -1,4 +1,5 @@
 using FluentAssertions;
+using NSubstitute;
 using VirtualVendingMachine.Vending;
 using Xunit;
 
@@ -6,23 +7,35 @@ namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
 public class DispenseTests
 {
+    private readonly IVendingProductsRepository _productsRepository;
+
+    private const VendingProduct ProductUnderTest = VendingProduct.Coke;
+    private const int PriceForProductUnderTest = TestConstants.Pricing.Coke;
+
+    public DispenseTests()
+    {
+        _productsRepository = Substitute.For<IVendingProductsRepository>();
+        _productsRepository.GetPriceFor(ProductUnderTest)
+            .Returns(PriceForProductUnderTest);
+    }
+
     [Fact]
     public void DispensesProductWhenPaidForInFull()
     {
         // Arrange
-        var dispenser = new VendingDispenser();
+        var dispenser = new VendingDispenser(_productsRepository);
         var expectedResult = new
         {
-            ProductName = VendingProduct.Coke.ToString(),
-            ProductPrice = TestConstants.Pricing.Coke
+            ProductName = ProductUnderTest.ToString(),
+            ProductPrice = PriceForProductUnderTest
         };
 
         // Act
         do dispenser.InsertCoin(10);
-        while (dispenser.GetCurrentTillAmount() < TestConstants.Pricing.Coke);
+        while (dispenser.GetCurrentTillAmount() < PriceForProductUnderTest);
 
         // Assert
-        dispenser.Dispense(VendingProduct.Coke)
+        dispenser.Dispense(ProductUnderTest)
             .Should()
             .BeEquivalentTo(expectedResult);
     }
@@ -31,7 +44,7 @@ public class DispenseTests
     public void ThrowsWhenAttemptingToDispenseWithInsufficientTillAmount()
     {
         // Arrange
-        var dispenser = new VendingDispenser();
+        var dispenser = new VendingDispenser(_productsRepository);
 
         // hard-coded values to avoid invoking business logic
         const int insertedCoin = 10;
@@ -46,7 +59,7 @@ public class DispenseTests
         var actual = () =>
         {
             dispenser.InsertCoin(insertedCoin);
-            dispenser.Dispense(VendingProduct.Coke);
+            dispenser.Dispense(ProductUnderTest);
         };
 
         // Assert

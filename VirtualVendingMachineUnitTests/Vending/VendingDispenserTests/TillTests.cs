@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using NSubstitute;
 using VirtualVendingMachine.Vending;
 using Xunit;
 
@@ -8,12 +9,20 @@ namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
 public class TillTests
 {
+    private readonly IVendingProductsRepository _productsRepository;
+
+    public TillTests()
+    {
+        _productsRepository =
+            Substitute.For<IVendingProductsRepository>();
+    }
+
     [Theory]
     [MemberData(nameof(SupportedCoinValues))]
     public void AcceptsSupportedCoinValues(int coin)
     {
         // Arrange
-        var dispenser = new VendingDispenser();
+        var dispenser = new VendingDispenser(_productsRepository);
 
         // Act
         dispenser.InsertCoin(coin);
@@ -26,7 +35,7 @@ public class TillTests
     public void ThrowsForUnsupportedCoinValues()
     {
         // Arrange
-        var dispenser = new VendingDispenser();
+        var dispenser = new VendingDispenser(_productsRepository);
 
         // Act
         var actual = () => dispenser.InsertCoin(123);
@@ -39,7 +48,7 @@ public class TillTests
     public void AccumulatesTill()
     {
         // Arrange
-        var dispenser = new VendingDispenser();
+        var dispenser = new VendingDispenser(_productsRepository);
 
         // Act
         dispenser.InsertCoin(10);

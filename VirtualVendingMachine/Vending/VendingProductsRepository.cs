@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace VirtualVendingMachine.Vending;
 
-public class VendingProductsRepository
+public class VendingProductsRepository : IVendingProductsRepository
 {
     private readonly ImmutableDictionary<VendingProduct, int> _stock;
     private readonly ImmutableDictionary<VendingProduct, int> _pricing;
