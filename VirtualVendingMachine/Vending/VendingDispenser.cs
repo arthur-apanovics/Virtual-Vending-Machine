@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Helpers;
 using VirtualVendingMachine.Tills;
@@ -39,28 +40,25 @@ public class VendingDispenser
 
     public DispenseResult Dispense(VendingProduct product)
     {
-        var productPrice = _productsRepository.GetPriceFor(product);
-        ThrowIfInsufficientFunds(product, productPrice);
+        var productCost = _productsRepository.GetPriceFor(product);
+        ThrowIfInsufficientFunds(product, productCost);
 
-        TransferCoinsToTill();
-        var change = RetrieveChange(productPrice);
+        var amountPaid = InsertedAmountInCents;
+        TransferInsertedCoinsToTill();
+        var change = RetrieveChange(amountPaid, productCost);
 
         return new DispenseResult(product.ToString(), productCost, change.Sum());
     }
 
-    private void TransferCoinsToTill()
+    private void TransferInsertedCoinsToTill()
     {
-        for (var i = 0; i < _insertedCoins.Count; i++)
-        {
-            _coinTill.Add(_insertedCoins[i]);
-            _insertedCoins.RemoveAt(i);
-        }
+        _coinTill.Add(_insertedCoins);
+        _insertedCoins.Clear();
     }
 
-    private int RetrieveChange(int productPrice)
+    private Coin[] RetrieveChange(int amountPaid, int productCost)
     {
-        // TODO: return individual coins
-        throw new NotImplementedException();
+        return _coinTill.Take(amountPaid - productCost);
     }
 
     private static void ThrowIfUnsupportedCoin(Coin coin)
