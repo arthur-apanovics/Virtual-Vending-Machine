@@ -33,6 +33,8 @@ public class VendingDispenser
         var productPrice = _productsRepository.GetPriceFor(product);
         ThrowIfInsufficientFunds(product, productPrice);
 
+        ResetTill();
+        
         // TODO: Return change
 
         // TODO: represent product somehow
@@ -40,6 +42,11 @@ public class VendingDispenser
         {
             ProductName = product.ToString(), ProductPrice = productPrice
         };
+    }
+
+    private void ResetTill()
+    {
+        _till = 0;
     }
 
     private static void ThrowIfUnsupportedCoin(int coinValue)

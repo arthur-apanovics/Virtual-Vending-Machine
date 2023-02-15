@@ -31,13 +31,26 @@ public class DispenseTests
         };
 
         // Act
-        do dispenser.InsertCoin(10);
-        while (dispenser.GetCurrentTillAmount() < PriceForProductUnderTest);
+        FillTillWIthRequiredAmount(dispenser);
 
         // Assert
         dispenser.Dispense(ProductUnderTest)
             .Should()
             .BeEquivalentTo(expectedResult);
+    }
+
+    [Fact]
+    public void ResetsTillAfterDispensing()
+    {
+        // Arrange
+        var dispenser = new VendingDispenser(_productsRepository);
+
+        // Act
+        FillTillWIthRequiredAmount(dispenser);
+        dispenser.Dispense(ProductUnderTest);
+
+        // Assert
+        dispenser.GetCurrentTillAmount().Should().Be(0);
     }
 
     [Fact]
@@ -66,5 +79,11 @@ public class DispenseTests
         actual.Should()
             .Throw<InsufficientFundsException>()
             .WithMessage(expectedMessage);
+    }
+
+    private static void FillTillWIthRequiredAmount(VendingDispenser dispenser)
+    {
+        do dispenser.InsertCoin(10);
+        while (dispenser.GetCurrentTillAmount() < PriceForProductUnderTest);
     }
 }
