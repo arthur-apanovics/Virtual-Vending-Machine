@@ -7,28 +7,28 @@ using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
-public class TillTests
+public class InsertedCoinTests
 {
     private readonly IVendingProductsRepository _productsRepository;
 
-    public TillTests()
+    public InsertedCoinTests()
     {
-        _productsRepository =
-            Substitute.For<IVendingProductsRepository>();
+        _productsRepository = Substitute.For<IVendingProductsRepository>();
     }
 
     [Theory]
-    [MemberData(nameof(SupportedCoinValues))]
+    [MemberData(nameof(AcceptedCoinValues))]
     public void AcceptsSupportedCoinValues(int coin)
     {
         // Arrange
         var dispenser = new VendingDispenser(_productsRepository);
+        var expectedCoins = new[] { coin };
 
         // Act
         dispenser.InsertCoin(coin);
 
         // Assert
-        dispenser.GetCurrentTillAmount().Should().Be(coin);
+        dispenser.InsertedCoins.Should().BeEquivalentTo(expectedCoins);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class TillTests
     }
 
     [Fact]
-    public void AccumulatesTill()
+    public void AccumulatesInsertedCoins()
     {
         // Arrange
         var dispenser = new VendingDispenser(_productsRepository);
@@ -56,10 +56,11 @@ public class TillTests
         dispenser.InsertCoin(50);
 
         // Assert
-        dispenser.GetCurrentTillAmount().Should().Be(80);
+        dispenser.InsertedCoins.Should().HaveCount(3);
+        dispenser.InsertedAmount.Should().Be(80);
     }
 
-    public static IEnumerable<object[]> SupportedCoinValues()
+    public static IEnumerable<object[]> AcceptedCoinValues()
     {
         yield return new object[] { 10 };
         yield return new object[] { 20 };

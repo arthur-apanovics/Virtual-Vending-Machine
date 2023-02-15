@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using VirtualVendingMachine.Helpers;
 
@@ -6,28 +8,26 @@ namespace VirtualVendingMachine.Vending;
 
 public class VendingDispenser
 {
+    public ImmutableArray<int> InsertedCoins =>
+        _insertedCoins.ToImmutableArray();
+    public int InsertedAmount => _insertedCoins.Sum();
+
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200, };
 
     private readonly IVendingProductsRepository _productsRepository;
-    private int _till;
+    private readonly List<int> _insertedCoins = new();
+
 
     public VendingDispenser(IVendingProductsRepository productsRepository)
     {
         _productsRepository = productsRepository;
-
-        ResetTill();
     }
 
     public void InsertCoin(int coinValue)
     {
         ThrowIfUnsupportedCoin(coinValue);
 
-        _till += coinValue;
-    }
-
-    public int GetCurrentTillAmount()
-    {
-        return _till;
+        _insertedCoins.Add(coinValue);
     }
 
     public DispenseResult Dispense(VendingProduct product)
@@ -35,20 +35,15 @@ public class VendingDispenser
         var productPrice = _productsRepository.GetPriceFor(product);
         ThrowIfInsufficientFunds(product, productPrice);
 
-        var change = CalculateChange(productPrice);
-        ResetTill();
+        var change = RetrieveChange(productPrice);
 
         return new DispenseResult(product.ToString(), productPrice, change);
     }
 
-    private int CalculateChange(int productPrice)
+    // TODO: return individual coins
+    private int RetrieveChange(int productPrice)
     {
-        return _till - productPrice;
-    }
-
-    private void ResetTill()
-    {
-        _till = 0;
+        return InsertedAmount - productPrice;
     }
 
     private static void ThrowIfUnsupportedCoin(int coinValue)
@@ -61,14 +56,14 @@ public class VendingDispenser
 
     private void ThrowIfInsufficientFunds(
         VendingProduct product,
-        int requiredTill
+        int requiredAmount
     )
     {
-        if (_till < requiredTill)
+        if (InsertedAmount < requiredAmount)
             throw new InsufficientFundsException(
                 $"Insufficient funds for product \"{product}\" - " +
-                $"{CurrencyFormatter.CentsAsCurrency(requiredTill - _till)} required " +
-                $"to satisfy product price of {CurrencyFormatter.CentsAsCurrency(requiredTill)}"
+                $"{CurrencyFormatter.CentsAsCurrency(requiredAmount - InsertedAmount)} required " +
+                $"to satisfy product price of {CurrencyFormatter.CentsAsCurrency(requiredAmount)}"
             );
     }
 }

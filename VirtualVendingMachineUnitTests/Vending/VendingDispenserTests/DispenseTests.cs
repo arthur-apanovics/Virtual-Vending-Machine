@@ -31,7 +31,7 @@ public class DispenseTests
         );
 
         // Act
-        FillTillWIthRequiredAmount(dispenser);
+        FillCoinHolderWIthRequiredAmount(dispenser);
 
         // Assert
         dispenser.Dispense(ProductUnderTest)
@@ -40,17 +40,18 @@ public class DispenseTests
     }
 
     [Fact]
-    public void ResetsTillAfterDispensing()
+    public void ResetsInsertedCoinsAfterDispensing()
     {
         // Arrange
         var dispenser = new VendingDispenser(_productsRepository);
 
         // Act
-        FillTillWIthRequiredAmount(dispenser);
+        FillCoinHolderWIthRequiredAmount(dispenser);
         dispenser.Dispense(ProductUnderTest);
 
         // Assert
-        dispenser.GetCurrentTillAmount().Should().Be(0);
+        dispenser.InsertedCoins.Should().BeEmpty();
+        dispenser.InsertedAmount.Should().Be(0);
     }
 
 
@@ -62,7 +63,7 @@ public class DispenseTests
         const int overfillAmount = 50;
 
         // Act
-        FillTillWIthRequiredAmount(dispenser);
+        FillCoinHolderWIthRequiredAmount(dispenser);
         dispenser.InsertCoin(overfillAmount);
         var result = dispenser.Dispense(ProductUnderTest);
 
@@ -71,7 +72,7 @@ public class DispenseTests
     }
 
     [Fact]
-    public void ThrowsWhenAttemptingToDispenseWithInsufficientTillAmount()
+    public void ThrowsWhenAttemptingToDispenseWithInsufficientFunds()
     {
         // Arrange
         var dispenser = new VendingDispenser(_productsRepository);
@@ -98,9 +99,9 @@ public class DispenseTests
             .WithMessage(expectedMessage);
     }
 
-    private static void FillTillWIthRequiredAmount(VendingDispenser dispenser)
+    private static void FillCoinHolderWIthRequiredAmount(VendingDispenser dispenser)
     {
         do dispenser.InsertCoin(10);
-        while (dispenser.GetCurrentTillAmount() < PriceForProductUnderTest);
+        while (dispenser.InsertedAmount < PriceForProductUnderTest);
     }
 }
