@@ -10,11 +10,11 @@ namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 public class CountCoinsForTests
 {
     [Theory]
-    [MemberData(nameof(CoinDataProvider))]
+    [MemberData(nameof(CoinBankTestDataProvider))]
     public void ReturnsCorrectAmountForStoredCoins(
         int coinValue,
         Coin[] coins,
-        int expectedAmount
+        int expectedCoinQty
     )
     {
         // Arrange
@@ -24,10 +24,10 @@ public class CountCoinsForTests
         var actual = till.CountCoinsFor(coinValue);
 
         // Assert
-        actual.Should().Be(expectedAmount);
+        actual.Should().Be(expectedCoinQty);
     }
 
-    public static IEnumerable<object[]> CoinDataProvider()
+    public static IEnumerable<object[]> CoinBankTestDataProvider()
     {
         yield return new object[]
         {
@@ -40,13 +40,13 @@ public class CountCoinsForTests
 
         foreach (var coinValue in TestConstants.CoinTill.AcceptedCoinValues)
         {
-            var amount = rnd.Next();
+            var coinQty = rnd.Next(minValue: 1, maxValue: 100);
 
             yield return new object[]
             {
                 coinValue,
-                Enumerable.Repeat(Coin.Create(coinValue), amount).ToArray(),
-                amount,
+                Enumerable.Repeat(Coin.Create(coinValue), coinQty).ToArray(),
+                coinQty,
             };
         }
     }
