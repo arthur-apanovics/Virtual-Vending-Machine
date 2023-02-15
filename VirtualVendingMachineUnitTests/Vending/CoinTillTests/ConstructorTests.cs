@@ -6,7 +6,7 @@ using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 
-public class CoinStorageTests
+public class ConstructorTests
 {
     [Fact]
     public void HoldsProvidedChangeBank()
@@ -19,11 +19,11 @@ public class CoinStorageTests
         const int expectedTwoDollarCoins = 5;
 
         var coins = Array.Empty<Coin>()
-            .Concat(Enumerable.Repeat(new Coin(10), expectedTenCentCoins))
-            .Concat(Enumerable.Repeat(new Coin(20), expectedTwentyCentCoins))
-            .Concat(Enumerable.Repeat(new Coin(50), expectedFiftyCentCoins))
-            .Concat(Enumerable.Repeat(new Coin(100), expectedOneDollarCoins))
-            .Concat(Enumerable.Repeat(new Coin(200), expectedTwoDollarCoins))
+            .Concat(Enumerable.Repeat(Coin.Create(10), expectedTenCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create(20), expectedTwentyCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create(50), expectedFiftyCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create(100), expectedOneDollarCoins))
+            .Concat(Enumerable.Repeat(Coin.Create(200), expectedTwoDollarCoins))
             .ToArray();
 
         // Act

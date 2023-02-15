@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using VirtualVendingMachine.Helpers;
+using VirtualVendingMachine.Tills;
 
 namespace VirtualVendingMachine.Vending;
 
 public class VendingDispenser
 {
-    public ImmutableArray<int> InsertedCoins =>
+    public ImmutableArray<Coin> InsertedCoins =>
         _insertedCoins.ToImmutableArray();
-    public int InsertedAmount => _insertedCoins.Sum();
 
-    private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200, };
+    public int InsertedAmountInCents => _insertedCoins.Sum(c => c.ValueInCents);
+
+    private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
     private readonly IVendingProductsRepository _productsRepository;
-    private readonly List<int> _insertedCoins = new();
+    private readonly List<Coin> _insertedCoins = new();
 
 
     public VendingDispenser(IVendingProductsRepository productsRepository)
@@ -23,11 +25,11 @@ public class VendingDispenser
         _productsRepository = productsRepository;
     }
 
-    public void InsertCoin(int coinValue)
+    public void InsertCoin(Coin coin)
     {
-        ThrowIfUnsupportedCoin(coinValue);
+        ThrowIfUnsupportedCoin(coin);
 
-        _insertedCoins.Add(coinValue);
+        _insertedCoins.Add(coin);
     }
 
     public DispenseResult Dispense(VendingProduct product)
@@ -35,23 +37,31 @@ public class VendingDispenser
         var productPrice = _productsRepository.GetPriceFor(product);
         ThrowIfInsufficientFunds(product, productPrice);
 
+        TransferCoinsToTill();
         var change = RetrieveChange(productPrice);
 
         return new DispenseResult(product.ToString(), productPrice, change);
     }
 
-    // TODO: return individual coins
-    private int RetrieveChange(int productPrice)
+    private void TransferCoinsToTill()
     {
-        return InsertedAmount - productPrice;
+        for (var i = 0; i < _insertedCoins.Count; i++)
+        {
+            // _coinTill.Store(_insertedCoins[i]);
+            _insertedCoins.RemoveAt(i);
+        }
     }
 
-    private static void ThrowIfUnsupportedCoin(int coinValue)
+    private int RetrieveChange(int productPrice)
     {
-        if (!SupportedCoins.Contains(coinValue))
-            throw new NotSupportedException(
-                $"{coinValue} coins are not supported"
-            );
+        // TODO: return individual coins
+        throw new NotImplementedException();
+    }
+
+    private static void ThrowIfUnsupportedCoin(Coin coin)
+    {
+        if (!SupportedCoins.Contains(coin.ValueInCents))
+            throw new NotSupportedException($"{coin} coins are not supported");
     }
 
     private void ThrowIfInsufficientFunds(
@@ -59,10 +69,10 @@ public class VendingDispenser
         int requiredAmount
     )
     {
-        if (InsertedAmount < requiredAmount)
+        if (InsertedAmountInCents < requiredAmount)
             throw new InsufficientFundsException(
                 $"Insufficient funds for product \"{product}\" - " +
-                $"{CurrencyFormatter.CentsAsCurrency(requiredAmount - InsertedAmount)} required " +
+                $"{CurrencyFormatter.CentsAsCurrency(requiredAmount - InsertedAmountInCents)} required " +
                 $"to satisfy product price of {CurrencyFormatter.CentsAsCurrency(requiredAmount)}"
             );
     }

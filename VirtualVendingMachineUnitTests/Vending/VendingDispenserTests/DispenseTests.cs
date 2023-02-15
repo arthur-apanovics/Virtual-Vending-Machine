@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NSubstitute;
+using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
 using Xunit;
 
@@ -51,7 +52,7 @@ public class DispenseTests
 
         // Assert
         dispenser.InsertedCoins.Should().BeEmpty();
-        dispenser.InsertedAmount.Should().Be(0);
+        dispenser.InsertedAmountInCents.Should().Be(0);
     }
 
 
@@ -64,7 +65,7 @@ public class DispenseTests
 
         // Act
         FillCoinHolderWIthRequiredAmount(dispenser);
-        dispenser.InsertCoin(overfillAmount);
+        dispenser.InsertCoin(Coin.Create(overfillAmount));
         var result = dispenser.Dispense(ProductUnderTest);
 
         // Assert
@@ -78,7 +79,7 @@ public class DispenseTests
         var dispenser = new VendingDispenser(_productsRepository);
 
         // hard-coded values to avoid invoking business logic
-        const int insertedCoin = 10;
+        var insertedCoin = Coin.Create(10);
         const string expectedProductName = "Coke";
         const string expectedFullPrice = "$1.80";
         const string expectedFillAmount = "$1.70";
@@ -101,7 +102,7 @@ public class DispenseTests
 
     private static void FillCoinHolderWIthRequiredAmount(VendingDispenser dispenser)
     {
-        do dispenser.InsertCoin(10);
-        while (dispenser.InsertedAmount < PriceForProductUnderTest);
+        do dispenser.InsertCoin(Coin.Create(10));
+        while (dispenser.InsertedAmountInCents < PriceForProductUnderTest);
     }
 }
