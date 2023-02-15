@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Helpers;
 using VirtualVendingMachine.Tills;
 
@@ -11,8 +12,7 @@ public class VendingDispenser
 {
     public ImmutableArray<Coin> InsertedCoins =>
         _insertedCoins.ToImmutableArray();
-
-    public int InsertedAmountInCents => _insertedCoins.Sum(c => c.ValueInCents);
+    public int InsertedAmountInCents => _insertedCoins.Sum();
 
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
@@ -45,7 +45,7 @@ public class VendingDispenser
         TransferCoinsToTill();
         var change = RetrieveChange(productPrice);
 
-        return new DispenseResult(product.ToString(), productPrice, change);
+        return new DispenseResult(product.ToString(), productCost, change.Sum());
     }
 
     private void TransferCoinsToTill()
