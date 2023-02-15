@@ -30,10 +30,10 @@ public class ConstructorTests
         var till = new CoinTill(coins);
 
         // Assert
-        till.TenCentCoins.Should().Be(expectedTenCentCoins);
-        till.TwentyCentCoins.Should().Be(expectedTwentyCentCoins);
-        till.FiftyCentCoins.Should().Be(expectedFiftyCentCoins);
-        till.OneDollarCoins.Should().Be(expectedOneDollarCoins);
-        till.TwoDollarCoins.Should().Be(expectedTwoDollarCoins);
+        till.CountCoinsFor(10).Should().Be(expectedTenCentCoins);
+        till.CountCoinsFor(20).Should().Be(expectedTwentyCentCoins);
+        till.CountCoinsFor(50).Should().Be(expectedFiftyCentCoins);
+        till.CountCoinsFor(100).Should().Be(expectedOneDollarCoins);
+        till.CountCoinsFor(200).Should().Be(expectedTwoDollarCoins);
     }
 }

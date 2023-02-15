@@ -8,12 +8,6 @@ namespace VirtualVendingMachine.Tills;
 
 public class CoinTill
 {
-    public int TenCentCoins => _till.Count(c => c.ValueInCents == 10);
-    public int TwentyCentCoins => _till.Count(c => c.ValueInCents == 20);
-    public int FiftyCentCoins => _till.Count(c => c.ValueInCents == 50);
-    public int OneDollarCoins => _till.Count(c => c.ValueInCents == 100);
-    public int TwoDollarCoins => _till.Count(c => c.ValueInCents == 200);
-
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
     private List<Coin> _till;
