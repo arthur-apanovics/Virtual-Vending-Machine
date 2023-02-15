@@ -1,33 +1,54 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtualVendingMachine.Exceptions;
+using VirtualVendingMachine.Extensions;
 
 namespace VirtualVendingMachine.Tills;
 
 public class CoinTill
 {
-    public int TenCentCoins => _coins.Count(c => c.ValueInCents == 10);
-    public int TwentyCentCoins => _coins.Count(c => c.ValueInCents == 20);
-    public int FiftyCentCoins => _coins.Count(c => c.ValueInCents == 50);
-    public int OneDollarCoins => _coins.Count(c => c.ValueInCents == 100);
-    public int TwoDollarCoins => _coins.Count(c => c.ValueInCents == 200);
+    public int TenCentCoins => _till.Count(c => c.ValueInCents == 10);
+    public int TwentyCentCoins => _till.Count(c => c.ValueInCents == 20);
+    public int FiftyCentCoins => _till.Count(c => c.ValueInCents == 50);
+    public int OneDollarCoins => _till.Count(c => c.ValueInCents == 100);
+    public int TwoDollarCoins => _till.Count(c => c.ValueInCents == 200);
 
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
-    private readonly List<Coin> _coins;
+    private List<Coin> _till;
 
     public CoinTill(IEnumerable<Coin> coins)
     {
-        _coins = coins.ToList();
+        _till = coins.ToList();
     }
 
     public int CountCoinsFor(int value) =>
-        _coins.Count(c => c.ValueInCents == value);
+        _till.Count(c => c.ValueInCents == value);
 
     public void Add(Coin coin)
     {
+        ValidateAndAddCoinToTill(coin);
+        SortCoinsInTill();
+    }
+
+    public void Add(IEnumerable<Coin> coins)
+    {
+        foreach (var coin in coins)
+            ValidateAndAddCoinToTill(coin);
+
+        SortCoinsInTill();
+    }
+
+    private void ValidateAndAddCoinToTill(Coin coin)
+    {
         ThrowIfUnsupportedCoin(coin);
-        _coins.Add(coin);
+        _till.Add(coin);
+    }
+
+    private void SortCoinsInTill()
+    {
+        _till = _till.OrderByDescending(c => c.ValueInCents).ToList();
     }
 
     private static void ThrowIfUnsupportedCoin(Coin coin)
@@ -36,5 +57,60 @@ public class CoinTill
             throw new NotSupportedException(
                 $"{nameof(CoinTill)} does not support {coin} coins"
             );
+    }
+
+    public Coin[] Take(int amount)
+    {
+        if (amount < 0)
+            throw new ArgumentException(
+                "Cannot take negative amounts from till"
+            );
+
+        if (amount == 0)
+            return Array.Empty<Coin>();
+
+        if (amount < SupportedCoins.Min())
+            throw new ArgumentException(
+                $"Cannot take {amount} from till - " +
+                $"smallest denominator supported is {SupportedCoins.Min()}"
+            );
+
+        if (IsSpecificCoinInTill(amount))
+            return new[] { TakeCoinFromTill(amount) };
+
+        var result = new List<Coin>();
+        var tillCopy = new Coin[_till.Count];
+        _till.CopyTo(tillCopy);
+        foreach (var coin in tillCopy)
+        {
+            if (result.Sum() == amount)
+                return result.ToArray();
+
+            if (coin.ValueInCents < amount)
+                result.Add(TakeCoinFromTill(coin));
+        }
+
+        throw new InsufficientFundsInChangeBankException();
+    }
+
+    private bool IsSpecificCoinInTill(int value)
+    {
+        return _till.Any(c => c.ValueInCents == value);
+    }
+
+    private Coin TakeCoinFromTill(int value)
+    {
+        return TakeCoinFromTill(Coin.Create(value));
+    }
+
+    private Coin TakeCoinFromTill(Coin coin)
+    {
+        var isRemoved = _till.Remove(coin);
+        if (!isRemoved)
+            throw new InvalidOperationException(
+                $"Failed to remove {coin} coin from till"
+            );
+
+        return coin;
     }
 }
