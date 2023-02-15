@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtualVendingMachine.Vending;
+namespace VirtualVendingMachine.Exceptions;
 
 public class InsufficientFundsException : Exception
 {
