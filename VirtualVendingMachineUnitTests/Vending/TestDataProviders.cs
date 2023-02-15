@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Vending;
 
-namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
+namespace VirtualVendingMachineUnitTests.Vending;
 
 public static class TestDataProviders
 {
