@@ -122,7 +122,7 @@ public class CoinTill : ICoinTill
                 "Cannot take negative amounts from till"
             );
 
-        if (amount < SupportedCoins.Min())
+        if (amount > 0 && amount < SupportedCoins.Min())
             throw new ArgumentException(
                 $"Cannot take {amount} from till - " +
                 $"smallest denominator supported is {SupportedCoins.Min()}"
