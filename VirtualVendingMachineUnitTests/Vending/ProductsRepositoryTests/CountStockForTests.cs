@@ -3,7 +3,7 @@ using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
-public class GetStockForTests
+public class CountStockForTests
 {
     [Theory]
     [MemberData(
@@ -17,7 +17,7 @@ public class GetStockForTests
             VendingProductsRepositoryBuilder.BuildWithDefaultStock();
 
         // Act
-        var actual = repository.GetStockFor(product);
+        var actual = repository.CountStockFor(product);
 
         // Assert
         actual.Should().BePositive();

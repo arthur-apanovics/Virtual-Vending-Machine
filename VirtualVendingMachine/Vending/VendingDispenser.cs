@@ -106,7 +106,7 @@ public class VendingDispenser
 
     private void ThrowIfProductNotInStock(Product product)
     {
-        if (_productsRepository.GetStockFor(product) == 0)
+        if (_productsRepository.CountStockFor(product) == 0)
             throw new ProductOutOfStockException();
     }
 }

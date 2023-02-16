@@ -9,7 +9,7 @@ namespace VirtualVendingMachine.Vending;
 public interface IVendingProductsRepository
 {
     ImmutableDictionary<Product, int> ListStock();
-    int GetStockFor(Product product);
+    int CountStockFor(Product product);
     void AddToStock(IEnumerable<StockItem> products);
     StockItem? TakeFromStock(Product product);
 }
@@ -24,7 +24,7 @@ public class VendingProductsRepository : IVendingProductsRepository
             .ToImmutableDictionary(g => g.First().Product, g => g.Count());
     }
 
-    public int GetStockFor(Product product)
+    public int CountStockFor(Product product)
     {
         return _stock.Count(si => si.Product == product);
     }

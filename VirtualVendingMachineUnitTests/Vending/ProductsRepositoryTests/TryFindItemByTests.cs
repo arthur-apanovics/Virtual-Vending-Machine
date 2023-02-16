@@ -57,6 +57,6 @@ public class TryFindItemByTests
         productsRepository.TryFindItemBy(item.Id, out var product);
 
         // Assert
-        productsRepository.GetStockFor(product!).Should().Be(1);
+        productsRepository.CountStockFor(product!).Should().Be(1);
     }
 }
