@@ -1,5 +1,3 @@
-using System;
-
 namespace VirtualVendingMachine.Vending.Models;
 
 public record StockItem

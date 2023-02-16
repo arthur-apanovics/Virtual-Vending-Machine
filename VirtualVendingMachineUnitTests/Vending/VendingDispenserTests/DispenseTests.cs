@@ -1,9 +1,9 @@
 using System;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
-using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending.Models;
 using VirtualVendingMachineUnitTests.Builders;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 

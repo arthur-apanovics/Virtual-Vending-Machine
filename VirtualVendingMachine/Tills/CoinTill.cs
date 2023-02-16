@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachine.Tills;
 

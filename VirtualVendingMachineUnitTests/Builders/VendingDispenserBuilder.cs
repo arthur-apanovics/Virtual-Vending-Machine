@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
 using VirtualVendingMachineUnitTests.Vending;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachineUnitTests.Builders;
 

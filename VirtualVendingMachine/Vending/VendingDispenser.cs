@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Helpers;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachine.Vending;
 

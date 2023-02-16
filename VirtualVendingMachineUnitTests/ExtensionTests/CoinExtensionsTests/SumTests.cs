@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Extensions;
-using VirtualVendingMachine.Tills;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachineUnitTests.ExtensionTests.CoinExtensionsTests;
 

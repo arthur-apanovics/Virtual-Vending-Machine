@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachine.Vending;

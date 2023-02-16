@@ -1,7 +1,6 @@
-using System;
 using VirtualVendingMachine.Helpers;
 
-namespace VirtualVendingMachine.Tills;
+namespace VirtualVendingMachine.Tills.Models;
 
 // TODO: Tests
 public readonly struct Coin

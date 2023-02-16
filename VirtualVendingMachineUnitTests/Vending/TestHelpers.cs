@@ -1,6 +1,6 @@
-using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
 using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending;
 

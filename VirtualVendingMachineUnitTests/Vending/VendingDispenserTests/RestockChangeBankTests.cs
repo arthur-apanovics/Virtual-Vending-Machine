@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using VirtualVendingMachine.Tills;
 using VirtualVendingMachineUnitTests.Builders;
+using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 

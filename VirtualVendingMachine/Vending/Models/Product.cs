@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace VirtualVendingMachine.Vending.Models;
 
 // TODO: TESTS
