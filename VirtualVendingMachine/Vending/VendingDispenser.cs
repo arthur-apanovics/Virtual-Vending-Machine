@@ -8,7 +8,20 @@ using VirtualVendingMachine.Tills.Models;
 
 namespace VirtualVendingMachine.Vending;
 
-public class VendingDispenser
+public interface IVendingDispenser
+{
+    ImmutableArray<Coin> InsertedCoins { get; }
+    int InsertedAmountInCents { get; }
+    ImmutableDictionary<Product, int> ListAvailableProductsAndStock();
+    void InsertCoin(Coin coin);
+    (StockItem Item, IEnumerable<Coin> Change) Dispense(Product product);
+    IEnumerable<Coin> CancelAndRefund();
+    IEnumerable<Coin> CollectEarnings();
+    void Restock(IEnumerable<StockItem> items);
+    void RestockChangeBank(IEnumerable<Coin> coins);
+}
+
+public class VendingDispenser : IVendingDispenser
 {
     public ImmutableArray<Coin> InsertedCoins =>
         _insertedCoins.ToImmutableArray();
