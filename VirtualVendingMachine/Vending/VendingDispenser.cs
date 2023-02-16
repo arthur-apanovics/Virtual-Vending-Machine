@@ -20,16 +20,18 @@ public class VendingDispenser
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
     private readonly IVendingProductsRepository _productsRepository;
+    private readonly IPricingService _pricingService;
     private readonly CoinTill _coinTill;
     private readonly List<Coin> _insertedCoins = new();
 
-
     public VendingDispenser(
         IVendingProductsRepository productsRepository,
+        IPricingService pricingService,
         IEnumerable<Coin> changeBank
     )
     {
         _productsRepository = productsRepository;
+        _pricingService = pricingService;
         _coinTill = new CoinTill(changeBank);
     }
 
@@ -43,9 +45,7 @@ public class VendingDispenser
         _insertedCoins.Add(coin);
     }
 
-    public (StockItem Item, IEnumerable<Coin> Change) Dispense(
-        Product product
-    )
+    public (StockItem Item, IEnumerable<Coin> Change) Dispense(Product product)
     {
         ThrowIfInsufficientFundsFor(product);
         ThrowIfProductNotInStock(product);
@@ -76,7 +76,7 @@ public class VendingDispenser
 
     private Coin[] GetChangeFor(Product product, int amountPaid)
     {
-        var productCost = _productsRepository.GetPriceFor(product);
+        var productCost = _pricingService.GetPriceFor(product);
 
         return _coinTill.Take(amountPaid - productCost);
     }
@@ -89,7 +89,7 @@ public class VendingDispenser
 
     private void ThrowIfInsufficientFundsFor(Product product)
     {
-        var productCost = _productsRepository.GetPriceFor(product);
+        var productCost = _pricingService.GetPriceFor(product);
         if (InsertedAmountInCents >= productCost)
             return;
 

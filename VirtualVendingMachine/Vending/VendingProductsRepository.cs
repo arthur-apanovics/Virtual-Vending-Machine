@@ -6,6 +6,14 @@ using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachine.Vending;
 
+public interface IVendingProductsRepository
+{
+    ImmutableDictionary<Product, int> ListStock();
+    int GetStockFor(Product product);
+    void AddStock(IEnumerable<StockItem> products);
+    StockItem? TakeFromStock(Product product);
+}
+
 public class VendingProductsRepository : IVendingProductsRepository
 {
     private readonly List<StockItem> _stock = new();
@@ -15,8 +23,6 @@ public class VendingProductsRepository : IVendingProductsRepository
 
     public VendingProductsRepository()
     {
-        // according to requirements, pricing is not subject to change
-        // and is therefore hard-coded
         _pricing = new Dictionary<Product, int>
         {
             { Product.Coke, 180 },
@@ -49,18 +55,6 @@ public class VendingProductsRepository : IVendingProductsRepository
 
         _stock.Remove(item);
         return item;
-    }
-
-    public int GetPriceFor(Product product)
-    {
-        if (!_pricing.ContainsKey(product))
-            throw new ArgumentOutOfRangeException(
-                nameof(product),
-                product,
-                $"No price found for \"{product}\""
-            );
-
-        return _pricing[product];
     }
 
     public bool TryFindItemBy(Guid id, out Product? product)

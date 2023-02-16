@@ -24,6 +24,13 @@ public static class TestConstants
         public const int Coke = 180;
         public const int Juice = 220;
         public const int ChocolateBar = 300;
+
+        public static readonly Dictionary<Product, int> DefaultPricing = new()
+        {
+            { Product.Coke, Coke },
+            { Product.Juice, Juice },
+            { Product.ChocolateBar, ChocolateBar },
+        };
     }
 
     public static class CoinTill

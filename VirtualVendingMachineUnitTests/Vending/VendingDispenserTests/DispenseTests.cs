@@ -10,8 +10,6 @@ namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
 public class DispenseTests
 {
-    // TODO: Provide our own pricing when testing
-
     [Fact]
     public void DispensesItemWhenPaidForInFull()
     {
@@ -20,11 +18,14 @@ public class DispenseTests
         var dispenser = VendingDispenserBuilder.Build(
             VendingProductsRepositoryBuilder.Build(
                 withStockItems: new[] { expectedItem }
+            ),
+            PricingServiceBuilder.Build(
+                withPricing: TestConstants.Pricing.DefaultPricing
             )
         );
 
         // Act
-        InsertRequiredFunds(dispenser);
+        InsertRequiredFundsFor(expectedItem.Product, dispenser);
         var actual = dispenser.Dispense(expectedItem.Product);
 
         // Assert
@@ -38,7 +39,7 @@ public class DispenseTests
         var dispenser = VendingDispenserBuilder.Build();
 
         // Act
-        InsertRequiredFunds(dispenser);
+        InsertRequiredFundsFor(Product.Coke, dispenser);
         dispenser.Dispense(Product.Coke);
 
         // Assert
@@ -50,11 +51,15 @@ public class DispenseTests
     public void ReturnsCorrectChange()
     {
         // Arrange
-        var dispenser = VendingDispenserBuilder.Build();
+        var dispenser = VendingDispenserBuilder.Build(
+            withPricingService: PricingServiceBuilder.Build(
+                withPricing: TestConstants.Pricing.DefaultPricing
+            )
+        );
         const int overfillAmount = 50;
 
         // Act
-        InsertRequiredFunds(dispenser);
+        InsertRequiredFundsFor(Product.Coke, dispenser);
         dispenser.InsertCoin(Coin.Create(overfillAmount));
         var result = dispenser.Dispense(Product.Coke);
 
@@ -73,7 +78,7 @@ public class DispenseTests
         );
 
         // Act
-        InsertRequiredFunds(dispenser);
+        InsertRequiredFundsFor(Product.Coke, dispenser);
         var actual = () => dispenser.Dispense(Product.Coke);
 
         // Assert
@@ -84,7 +89,11 @@ public class DispenseTests
     public void ThrowsWhenAttemptingToDispenseWithInsufficientFunds()
     {
         // Arrange
-        var dispenser = VendingDispenserBuilder.Build();
+        var dispenser = VendingDispenserBuilder.Build(
+            withPricingService: PricingServiceBuilder.Build(
+                withPricing: TestConstants.Pricing.DefaultPricing
+            )
+        );
 
         // hard-coded values to avoid invoking business logic
         var insertedCoin = Coin.Create(10);
@@ -108,9 +117,13 @@ public class DispenseTests
             .WithMessage(expectedMessage);
     }
 
-    private static void InsertRequiredFunds(VendingDispenser dispenser)
+    private static void InsertRequiredFundsFor(
+        Product product,
+        VendingDispenser dispenser
+    )
     {
         do dispenser.InsertCoin(Coin.Create(10));
-        while (dispenser.InsertedAmountInCents < TestConstants.Pricing.Coke);
+        while (dispenser.InsertedAmountInCents <
+               TestConstants.Pricing.DefaultPricing[product]);
     }
 }

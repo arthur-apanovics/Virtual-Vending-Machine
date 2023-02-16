@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using VirtualVendingMachine.Vending;
 using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachineUnitTests.Builders;
 
-namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
+namespace VirtualVendingMachineUnitTests.Vending.PricingService;
 
 public class GetPriceForTests
 {
@@ -14,10 +14,10 @@ public class GetPriceForTests
     )
     {
         // Arrange
-        var repository = new VendingProductsRepository();
+        var pricingService = PricingServiceBuilder.Build();
 
         // Act
-        var actual = repository.GetPriceFor(product);
+        var actual = pricingService.GetPriceFor(product);
 
         // Assert
         actual.Should().Be(expectedPrice);
@@ -31,10 +31,10 @@ public class GetPriceForTests
     public void HasPriceForAllProducts(Product product)
     {
         // Arrange
-        var repository = new VendingProductsRepository();
+        var pricingService = PricingServiceBuilder.Build();
 
         // Act
-        var actual = repository.GetPriceFor(product);
+        var actual = pricingService.GetPriceFor(product);
 
         // Assert
         actual.Should().BePositive();
@@ -52,4 +52,5 @@ public class GetPriceForTests
             Product.ChocolateBar, TestConstants.Pricing.ChocolateBar
         };
     }
+
 }
