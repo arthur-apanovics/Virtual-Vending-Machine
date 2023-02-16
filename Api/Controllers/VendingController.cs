@@ -23,7 +23,7 @@ public class VendingController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Index()
     {
         var response =
             await _mediator.Send(new ListAvailableProductsAndStockRequest());
@@ -31,7 +31,15 @@ public class VendingController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpGet("accepted-coins")]
+    public async Task<IActionResult> GetAcceptedCoins()
+    {
+        var response = await _mediator.Send(new ListAcceptedCoinsRequest());
+
+        return Ok(response);
+    }
+
+    [HttpPost("insert-coin")]
     public async Task<IActionResult> InsertCoin(
         [FromBody] InsertCoinRequest request
     )

@@ -54,6 +54,11 @@ public class CoinTill : ICoinTill
             : throw new InsufficientFundsInChangeBankException();
     }
 
+    public IEnumerable<Coin> ListSupportedFundDenominators()
+    {
+        return _supportedCoins.ToArray();
+    }
+
     private bool TryTakeExactAmountFromTill(int amount, out Coin[] coins)
     {
         var result = new List<Coin>();

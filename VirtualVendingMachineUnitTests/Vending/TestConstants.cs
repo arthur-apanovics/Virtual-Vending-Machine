@@ -47,5 +47,10 @@ public static class TestConstants
             .Concat(Enumerable.Repeat(Coin.Create10(), 30))
             .Concat(Enumerable.Repeat(Coin.Create20(), 15))
             .ToArray();
+
+        public static readonly int[] DefaultAcceptedCoinValues =
+        {
+            10, 20, 50, 100, 200
+        };
     }
 }

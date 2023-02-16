@@ -45,7 +45,7 @@ namespace VirtualVendingMachine
 
             services.AddMediatR(typeof(Startup));
 
-            services.AddScoped<ICoinTill, CoinTill>();
+            services.AddScoped<ICoinTill>(_ => CreateCoinTill());
             services.AddScoped<IPricingService>(_ => CreatePricingService());
             services.AddScoped<IVendingProductsRepository>(
                 _ => CreateProductsRepository()
@@ -76,6 +76,11 @@ namespace VirtualVendingMachine
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private static ICoinTill CreateCoinTill()
+        {
+            return new CoinTill(VendingOptions.CoinTillSupportedCoins);
         }
 
         private static PricingService CreatePricingService()
