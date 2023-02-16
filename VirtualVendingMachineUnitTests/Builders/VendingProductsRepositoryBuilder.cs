@@ -15,7 +15,7 @@ public static class VendingProductsRepositoryBuilder
         var productsRepository = new VendingProductsRepository();
 
         if (withStockItems is not null)
-            productsRepository.AddStock(withStockItems);
+            productsRepository.AddToStock(withStockItems);
 
         return productsRepository;
     }
@@ -27,7 +27,7 @@ public static class VendingProductsRepositoryBuilder
 
         foreach (var (product, qty) in productQuantities)
         {
-            productsRepository.AddStock(
+            productsRepository.AddToStock(
                 Enumerable.Repeat(StockItem.Create(product), qty)
             );
         }

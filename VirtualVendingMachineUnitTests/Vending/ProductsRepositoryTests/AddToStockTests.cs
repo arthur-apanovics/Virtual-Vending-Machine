@@ -5,7 +5,7 @@ using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
-public class InsertStockTests
+public class AddToStockTests
 {
     [Fact]
     public void CorrectlyUpdatesStock()
@@ -22,7 +22,7 @@ public class InsertStockTests
         // Act
         foreach (var (product, qty) in expectedStock)
         {
-            productsRepository.AddStock(
+            productsRepository.AddToStock(
                 Enumerable.Repeat(StockItem.Create(product), qty)
             );
         }

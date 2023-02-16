@@ -10,26 +10,13 @@ public interface IVendingProductsRepository
 {
     ImmutableDictionary<Product, int> ListStock();
     int GetStockFor(Product product);
-    void AddStock(IEnumerable<StockItem> products);
+    void AddToStock(IEnumerable<StockItem> products);
     StockItem? TakeFromStock(Product product);
 }
 
 public class VendingProductsRepository : IVendingProductsRepository
 {
     private readonly List<StockItem> _stock = new();
-
-    // TODO: Extract pricing into separate service
-    private readonly ImmutableDictionary<Product, int> _pricing;
-
-    public VendingProductsRepository()
-    {
-        _pricing = new Dictionary<Product, int>
-        {
-            { Product.Coke, 180 },
-            { Product.Juice, 220 },
-            { Product.ChocolateBar, 300 },
-        }.ToImmutableDictionary();
-    }
 
     public ImmutableDictionary<Product, int> ListStock()
     {
@@ -42,7 +29,7 @@ public class VendingProductsRepository : IVendingProductsRepository
         return _stock.Count(si => si.Product == product);
     }
 
-    public void AddStock(IEnumerable<StockItem> items)
+    public void AddToStock(IEnumerable<StockItem> items)
     {
         _stock.AddRange(items);
     }
