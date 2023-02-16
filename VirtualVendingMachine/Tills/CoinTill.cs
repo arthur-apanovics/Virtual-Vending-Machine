@@ -37,34 +37,28 @@ public class CoinTill : ICoinTill
 
     public Coin[] Take(int amount)
     {
-        if (amount < 0)
-            throw new ArgumentException(
-                "Cannot take negative amounts from till"
-            );
+        ThrowIfInvalidAmountToTake(amount);
 
         if (amount == 0)
             return Array.Empty<Coin>();
 
-        if (amount < SupportedCoins.Min())
-            throw new ArgumentException(
-                $"Cannot take {amount} from till - " +
-                $"smallest denominator supported is {SupportedCoins.Min()}"
-            );
-
         if (IsSpecificCoinInTill(amount))
             return new[] { TakeCoinFromTill(amount) };
 
+        return TryTakeExactAmountFromTill(amount, out var coins)
+            ? coins
+            : throw new InsufficientFundsInChangeBankException();
+    }
+
+    private bool TryTakeExactAmountFromTill(int amount, out Coin[] coins)
+    {
         var result = new List<Coin>();
-        var tillCopy = new Coin[_till.Count];
-        _till.CopyTo(tillCopy);
-        foreach (var coin in tillCopy)
+        foreach (var coin in _till.ToArray())
         {
             if (result.Sum() == amount)
                 break;
-
             if (coin.ValueInCents > amount)
                 continue;
-
             if (result.Sum() + coin.ValueInCents > amount)
                 continue;
 
@@ -72,9 +66,13 @@ public class CoinTill : ICoinTill
         }
 
         if (result.Sum() == amount)
-            return result.ToArray();
+        {
+            coins = result.ToArray();
+            return true;
+        }
 
-        throw new InsufficientFundsInChangeBankException();
+        coins = Array.Empty<Coin>();
+        return false;
     }
 
     private void ValidateAndAddCoinToTill(Coin coin)
@@ -86,14 +84,6 @@ public class CoinTill : ICoinTill
     private void SortCoinsInTill()
     {
         _till = _till.OrderByDescending(c => c.ValueInCents).ToList();
-    }
-
-    private static void ThrowIfUnsupportedCoin(Coin coin)
-    {
-        if (!SupportedCoins.Contains(coin.ValueInCents))
-            throw new NotSupportedException(
-                $"{nameof(CoinTill)} does not support {coin} coins"
-            );
     }
 
     private bool IsSpecificCoinInTill(int value)
@@ -115,5 +105,27 @@ public class CoinTill : ICoinTill
             );
 
         return coin;
+    }
+
+    private static void ThrowIfUnsupportedCoin(Coin coin)
+    {
+        if (!SupportedCoins.Contains(coin.ValueInCents))
+            throw new NotSupportedException(
+                $"{nameof(CoinTill)} does not support {coin} coins"
+            );
+    }
+
+    private static void ThrowIfInvalidAmountToTake(int amount)
+    {
+        if (amount < 0)
+            throw new ArgumentException(
+                "Cannot take negative amounts from till"
+            );
+
+        if (amount < SupportedCoins.Min())
+            throw new ArgumentException(
+                $"Cannot take {amount} from till - " +
+                $"smallest denominator supported is {SupportedCoins.Min()}"
+            );
     }
 }
