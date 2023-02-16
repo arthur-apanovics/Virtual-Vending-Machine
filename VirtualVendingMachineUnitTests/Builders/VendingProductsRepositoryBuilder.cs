@@ -9,13 +9,13 @@ namespace VirtualVendingMachineUnitTests.Builders;
 public static class VendingProductsRepositoryBuilder
 {
     public static VendingProductsRepository Build(
-        IEnumerable<StockItem>? stockItems = null
+        IEnumerable<StockItem>? withStockItems = null
     )
     {
         var productsRepository = new VendingProductsRepository();
 
-        if (stockItems is not null)
-            productsRepository.AddStock(stockItems);
+        if (withStockItems is not null)
+            productsRepository.AddStock(withStockItems);
 
         return productsRepository;
     }
