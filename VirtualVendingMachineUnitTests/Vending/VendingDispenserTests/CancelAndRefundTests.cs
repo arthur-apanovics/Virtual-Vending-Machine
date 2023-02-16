@@ -14,10 +14,10 @@ public class CancelAndRefundTests
         var dispenser = VendingDispenserBuilder.Build();
         var expectedCoins = new[]
         {
-            Coin.Create(10),
-            Coin.Create(20),
-            Coin.Create(50),
-            Coin.Create(100),
+            Coin.Create10(),
+            Coin.Create20(),
+            Coin.Create50(),
+            Coin.Create100(),
         };
 
         // Act
@@ -38,9 +38,9 @@ public class CancelAndRefundTests
         var dispenser = VendingDispenserBuilder.Build();
 
         // Act
-        dispenser.InsertCoin(Coin.Create(50));
-        dispenser.InsertCoin(Coin.Create(20));
-        dispenser.InsertCoin(Coin.Create(100));
+        dispenser.InsertCoin(Coin.Create50());
+        dispenser.InsertCoin(Coin.Create20());
+        dispenser.InsertCoin(Coin.Create100());
         dispenser.CancelAndRefund();
 
         // Assert

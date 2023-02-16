@@ -46,9 +46,9 @@ public class InsertedCoinTests
         var dispenser = VendingDispenserBuilder.Build();
 
         // Act
-        dispenser.InsertCoin(Coin.Create(10));
-        dispenser.InsertCoin(Coin.Create(20));
-        dispenser.InsertCoin(Coin.Create(50));
+        dispenser.InsertCoin(Coin.Create10());
+        dispenser.InsertCoin(Coin.Create20());
+        dispenser.InsertCoin(Coin.Create50());
 
         // Assert
         dispenser.InsertedCoins.Should().HaveCount(3);

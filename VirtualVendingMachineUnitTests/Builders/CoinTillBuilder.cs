@@ -13,11 +13,11 @@ public static class CoinTillBuilder
     public static CoinTill BuildWithStockedCoinBank() =>
         new(
             coins: Array.Empty<Coin>()
-                .Concat(Enumerable.Repeat(Coin.Create(10), 50))
-                .Concat(Enumerable.Repeat(Coin.Create(20), 40))
-                .Concat(Enumerable.Repeat(Coin.Create(50), 30))
-                .Concat(Enumerable.Repeat(Coin.Create(100), 20))
-                .Concat(Enumerable.Repeat(Coin.Create(200), 10))
+                .Concat(Enumerable.Repeat(Coin.Create10(), 50))
+                .Concat(Enumerable.Repeat(Coin.Create20(), 40))
+                .Concat(Enumerable.Repeat(Coin.Create50(), 30))
+                .Concat(Enumerable.Repeat(Coin.Create100(), 20))
+                .Concat(Enumerable.Repeat(Coin.Create200(), 10))
                 .ToArray()
         );
 }

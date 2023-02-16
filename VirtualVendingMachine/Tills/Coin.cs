@@ -19,8 +19,12 @@ public readonly struct Coin
 
     public int ValueInCents { get; }
 
-    // TODO: create10, create20, etc.
     public static Coin Create(int value) => new(value);
+    public static Coin Create10() => new(10);
+    public static Coin Create20() => new(20);
+    public static Coin Create50() => new(50);
+    public static Coin Create100() => new(100);
+    public static Coin Create200() => new(200);
 
     public override string ToString() =>
         CurrencyFormatter.CentsAsCurrency(ValueInCents);

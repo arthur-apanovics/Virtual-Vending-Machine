@@ -35,7 +35,7 @@ public class TakeTests
     public void RemovesCoinFromTillAfterTaking()
     {
         // Arrange
-        var till = CoinTillBuilder.Build(new[] { Coin.Create(50) });
+        var till = CoinTillBuilder.Build(new[] { Coin.Create50() });
 
         // Act
         till.Take(50);
@@ -75,7 +75,7 @@ public class TakeTests
     public void ThrowsExceptionIfNotEnoughCoins()
     {
         // Arrange
-        var till = CoinTillBuilder.Build(new[] { Coin.Create(10) });
+        var till = CoinTillBuilder.Build(new[] { Coin.Create10() });
 
         // Act
         var actual = () => till.Take(50);

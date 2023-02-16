@@ -2,7 +2,6 @@ using System;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Tills;
-using VirtualVendingMachine.Vending;
 using VirtualVendingMachine.Vending.Models;
 using VirtualVendingMachineUnitTests.Builders;
 
@@ -25,7 +24,7 @@ public class DispenseTests
         );
 
         // Act
-        InsertRequiredFundsFor(expectedItem.Product, dispenser);
+        TestHelpers.InsertRequiredFundsFor(expectedItem.Product, dispenser);
         var actual = dispenser.Dispense(expectedItem.Product);
 
         // Assert
@@ -39,7 +38,7 @@ public class DispenseTests
         var dispenser = VendingDispenserBuilder.Build();
 
         // Act
-        InsertRequiredFundsFor(Product.Coke, dispenser);
+        TestHelpers.InsertRequiredFundsFor(Product.Coke, dispenser);
         dispenser.Dispense(Product.Coke);
 
         // Assert
@@ -59,7 +58,7 @@ public class DispenseTests
         const int overfillAmount = 50;
 
         // Act
-        InsertRequiredFundsFor(Product.Coke, dispenser);
+        TestHelpers.InsertRequiredFundsFor(Product.Coke, dispenser);
         dispenser.InsertCoin(Coin.Create(overfillAmount));
         var result = dispenser.Dispense(Product.Coke);
 
@@ -78,7 +77,7 @@ public class DispenseTests
         );
 
         // Act
-        InsertRequiredFundsFor(Product.Coke, dispenser);
+        TestHelpers.InsertRequiredFundsFor(Product.Coke, dispenser);
         var actual = () => dispenser.Dispense(Product.Coke);
 
         // Assert
@@ -96,7 +95,7 @@ public class DispenseTests
         );
 
         // hard-coded values to avoid invoking business logic
-        var insertedCoin = Coin.Create(10);
+        var insertedCoin = Coin.Create10();
         const string expectedProductName = "Coke";
         const string expectedFullPrice = "$1.80";
         const string expectedFillAmount = "$1.70";
@@ -115,15 +114,5 @@ public class DispenseTests
         actual.Should()
             .Throw<InsufficientFundsException>()
             .WithMessage(expectedMessage);
-    }
-
-    private static void InsertRequiredFundsFor(
-        Product product,
-        VendingDispenser dispenser
-    )
-    {
-        do dispenser.InsertCoin(Coin.Create(10));
-        while (dispenser.InsertedAmountInCents <
-               TestConstants.Pricing.DefaultPricing[product]);
     }
 }

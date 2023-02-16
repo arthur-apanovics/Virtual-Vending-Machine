@@ -19,11 +19,11 @@ public class ConstructorTests
         const int expectedTwoDollarCoins = 5;
 
         var coins = Array.Empty<Coin>()
-            .Concat(Enumerable.Repeat(Coin.Create(10), expectedTenCentCoins))
-            .Concat(Enumerable.Repeat(Coin.Create(20), expectedTwentyCentCoins))
-            .Concat(Enumerable.Repeat(Coin.Create(50), expectedFiftyCentCoins))
-            .Concat(Enumerable.Repeat(Coin.Create(100), expectedOneDollarCoins))
-            .Concat(Enumerable.Repeat(Coin.Create(200), expectedTwoDollarCoins))
+            .Concat(Enumerable.Repeat(Coin.Create10(), expectedTenCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create20(), expectedTwentyCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create50(), expectedFiftyCentCoins))
+            .Concat(Enumerable.Repeat(Coin.Create100(), expectedOneDollarCoins))
+            .Concat(Enumerable.Repeat(Coin.Create200(), expectedTwoDollarCoins))
             .ToArray();
 
         // Act

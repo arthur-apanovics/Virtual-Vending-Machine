@@ -23,7 +23,7 @@ public class SumTests
     {
         yield return new object[]
         {
-            Enumerable.Repeat(Coin.Create(10), 15), 150
+            Enumerable.Repeat(Coin.Create10(), 15), 150
         };
         yield return new object[]
         {
@@ -33,8 +33,8 @@ public class SumTests
         {
             new[]
             {
-                Coin.Create(10),
-                Coin.Create(20),
+                Coin.Create10(),
+                Coin.Create20(),
                 Coin.Create(40),
             },
             70

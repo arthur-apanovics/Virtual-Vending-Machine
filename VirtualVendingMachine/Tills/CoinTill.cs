@@ -8,9 +8,12 @@ namespace VirtualVendingMachine.Tills;
 
 public class CoinTill
 {
+    public int TotalValue => _till.Sum();
+
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
     private List<Coin> _till;
+
 
     public CoinTill(IEnumerable<Coin> coins)
     {

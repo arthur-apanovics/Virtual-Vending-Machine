@@ -31,12 +31,12 @@ public class AddTests
         var till = new CoinTill(Array.Empty<Coin>());
         var coinRange = new[]
         {
-            Coin.Create(10),
-            Coin.Create(10),
-            Coin.Create(10),
-            Coin.Create(50),
-            Coin.Create(50),
-            Coin.Create(200),
+            Coin.Create10(),
+            Coin.Create10(),
+            Coin.Create10(),
+            Coin.Create50(),
+            Coin.Create50(),
+            Coin.Create200(),
         };
 
         // Act
