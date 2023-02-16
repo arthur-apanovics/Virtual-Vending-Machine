@@ -73,13 +73,9 @@ public class VendingDispenser
         return refund;
     }
 
-    // TODO: FundsInTill no longer needed
-    public (IEnumerable<Coin> Earnings, int FundsInTill) CollectEarnings()
+    public IEnumerable<Coin> CollectEarnings()
     {
-        var earnings =
-            _coinTill.Take(_coinTill.TotalValue - _changeBankStartAmount);
-
-        return (earnings, _coinTill.TotalValue);
+        return _coinTill.Take(_coinTill.TotalValue - _changeBankStartAmount);
     }
 
     public void Restock(IEnumerable<StockItem> items)

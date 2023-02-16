@@ -38,7 +38,7 @@ public class CollectEarningsTests
         foreach (var product in productsToPurchase)
             Purchase(product, dispenser);
 
-        var (actualEarnings, _) = dispenser.CollectEarnings();
+        var actualEarnings = dispenser.CollectEarnings();
 
         // Assert
         actualEarnings.Sum().Should().Be(expectedEarnings);
@@ -48,10 +48,12 @@ public class CollectEarningsTests
     public void RemovesFundsFromTillAfterCollectingEarnings()
     {
         // Arrange
+        var coinTill = CoinTillBuilder.Build(Array.Empty<Coin>());
         var dispenser = VendingDispenserBuilder.Build(
             withPricingService: PricingServiceBuilder.Build(
                 TestConstants.Pricing.DefaultPricing
             ),
+            withCoinTill: coinTill,
             withChangeBank: Array.Empty<Coin>()
         );
         var productsToPurchase = new[]
@@ -63,10 +65,10 @@ public class CollectEarningsTests
         foreach (var product in productsToPurchase)
             Purchase(product, dispenser);
 
-        var (_, fundsInTill) = dispenser.CollectEarnings();
+        dispenser.CollectEarnings();
 
         // Assert
-        fundsInTill.Should().Be(0);
+        coinTill.TotalValue.Should().Be(0);
     }
 
     private static void Purchase(Product product, VendingDispenser dispenser)
