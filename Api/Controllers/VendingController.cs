@@ -48,4 +48,12 @@ public class VendingController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpDelete("cancel-request")]
+    public async Task<IActionResult> CancelAndRefund()
+    {
+        var response = await _mediator.Send(new CancelAndRefundRequest());
+
+        return Ok(response);
+    }
 }
