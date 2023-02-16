@@ -81,6 +81,11 @@ public class VendingDispenser
         return (earnings, _coinTill.TotalValue);
     }
 
+    public void Restock(IEnumerable<StockItem> items)
+    {
+        _productsRepository.AddToStock(items);
+    }
+
     private void TransferInsertedCoinsToTill()
     {
         _coinTill.Add(_insertedCoins);
