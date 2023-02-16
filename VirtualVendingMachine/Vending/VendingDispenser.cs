@@ -115,7 +115,7 @@ public class VendingDispenser : IVendingDispenser
     private static void ThrowIfUnsupportedCoin(Coin coin)
     {
         if (!SupportedCoins.Contains(coin.ValueInCents))
-            throw new NotSupportedException($"{coin} coins are not supported");
+            throw new NotSupportedCoinException(coin);
     }
 
     private void ThrowIfInsufficientFundsFor(Product product)

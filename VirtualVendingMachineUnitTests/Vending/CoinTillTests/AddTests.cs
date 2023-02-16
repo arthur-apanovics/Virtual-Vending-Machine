@@ -1,4 +1,5 @@
 using System;
+using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachineUnitTests.Builders;
 using VirtualVendingMachine.Tills.Models;
 
@@ -60,6 +61,6 @@ public class AddTests
         var actual = () => till.Add(Coin.Create(321));
 
         // Assert
-        actual.Should().ThrowExactly<NotSupportedException>();
+        actual.Should().ThrowExactly<NotSupportedCoinException>();
     }
 }

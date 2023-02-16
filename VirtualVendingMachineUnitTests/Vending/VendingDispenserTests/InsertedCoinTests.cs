@@ -1,4 +1,5 @@
 using System;
+using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachineUnitTests.Builders;
 using VirtualVendingMachine.Tills.Models;
 
@@ -34,7 +35,7 @@ public class InsertedCoinTests
         var actual = () => dispenser.InsertCoin(Coin.Create(123));
 
         // Assert
-        actual.Should().ThrowExactly<NotSupportedException>();
+        actual.Should().ThrowExactly<NotSupportedCoinException>();
     }
 
     [Fact]

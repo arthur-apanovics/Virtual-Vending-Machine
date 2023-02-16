@@ -110,9 +110,7 @@ public class CoinTill : ICoinTill
     private static void ThrowIfUnsupportedCoin(Coin coin)
     {
         if (!SupportedCoins.Contains(coin.ValueInCents))
-            throw new NotSupportedException(
-                $"{nameof(CoinTill)} does not support {coin} coins"
-            );
+            throw new NotSupportedCoinException(coin);
     }
 
     private static void ThrowIfInvalidAmountToTake(int amount)
