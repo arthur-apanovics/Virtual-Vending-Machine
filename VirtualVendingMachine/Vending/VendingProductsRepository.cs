@@ -8,7 +8,8 @@ namespace VirtualVendingMachine.Vending;
 
 public class VendingProductsRepository : IVendingProductsRepository
 {
-    private readonly List<Product> _stock = new();
+    private readonly List<StockItem> _stock = new();
+
     // TODO: Extract pricing into separate service
     private readonly ImmutableDictionary<Product, int> _pricing;
 
@@ -26,13 +27,18 @@ public class VendingProductsRepository : IVendingProductsRepository
 
     public ImmutableDictionary<Product, int> ListStock()
     {
-        return _stock.GroupBy(p => p.Name)
-            .ToImmutableDictionary(g => g.First(), g => g.Count());
+        return _stock.GroupBy(si => si.Product.Name)
+            .ToImmutableDictionary(g => g.First().Product, g => g.Count());
     }
 
     public int GetStockFor(Product product)
     {
-        return _stock.Count(p => p == product);
+        return _stock.Count(si => si.Product == product);
+    }
+
+    public void AddStock(IEnumerable<StockItem> items)
+    {
+        _stock.AddRange(items);
     }
 
     public int GetPriceFor(Product product)

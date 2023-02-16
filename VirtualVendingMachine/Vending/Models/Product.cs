@@ -12,6 +12,8 @@ public record Product
         Name = name;
     }
 
+    public override string ToString() => Name;
+
     public static Product Coke => new("Coke");
 
     public static Product Juice => new("Juice");

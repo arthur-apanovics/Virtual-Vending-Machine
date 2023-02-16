@@ -1,5 +1,5 @@
-using VirtualVendingMachine.Vending;
 using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
@@ -13,7 +13,8 @@ public class GetStockForTests
     public void ReturnsPositiveValue(Product product)
     {
         // Arrange
-        var repository = new VendingProductsRepository();
+        var repository =
+            VendingProductsRepositoryBuilder.BuildWithDefaultStock();
 
         // Act
         var actual = repository.GetStockFor(product);

@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Tills;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending;
 
@@ -8,9 +10,13 @@ public static class TestConstants
 {
     public static class Stock
     {
-        public const int CokeDefaultStockQty = 10;
-        public const int JuiceDefaultStockQty = 9;
-        public const int ChocolateBarDefaultStockQty = 8;
+        public static readonly Dictionary<Product, int>
+            DefaultProductQuantities = new()
+            {
+                { Product.Coke, 10 },
+                { Product.Juice, 9 },
+                { Product.ChocolateBar, 8 },
+            };
     }
 
     public static class Pricing
