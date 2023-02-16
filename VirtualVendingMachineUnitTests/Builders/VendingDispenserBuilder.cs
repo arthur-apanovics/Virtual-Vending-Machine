@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NSubstitute;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
 using VirtualVendingMachineUnitTests.Vending;
@@ -14,7 +13,7 @@ public static class VendingDispenserBuilder
     ) =>
         new(
             withProductsRepository ??
-            Substitute.For<IVendingProductsRepository>(),
+            VendingProductsRepositoryBuilder.BuildWithDefaultStock(),
             withCoinBank ?? TestConstants.VendingDispenser.DefaultChangeBank
         );
 }

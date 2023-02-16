@@ -43,20 +43,21 @@ public class VendingDispenser
         _insertedCoins.Add(coin);
     }
 
-    public DispenseResult Dispense(Product product)
+    // TODO: TryDispense
+    public (StockItem Item, IEnumerable<Coin> Change) Dispense(
+        Product product
+    )
     {
-        var productCost = _productsRepository.GetPriceFor(product);
-        ThrowIfInsufficientFunds(product, productCost);
+        ThrowIfInsufficientFundsFor(product);
+        // TODO: throw if not in stock
 
         var amountPaid = InsertedAmountInCents;
         TransferInsertedCoinsToTill();
-        var change = RetrieveChange(amountPaid, productCost);
 
-        return new DispenseResult(
-            product.ToString(),
-            productCost,
-            change.Sum()
-        );
+        var change = GetChangeFor(product, amountPaid);
+        var item = _productsRepository.TakeFromStock(product);
+
+        return (item!, change); // TODO: handle null
     }
 
     public IEnumerable<Coin> CancelAndRefund()
@@ -73,8 +74,10 @@ public class VendingDispenser
         _insertedCoins.Clear();
     }
 
-    private Coin[] RetrieveChange(int amountPaid, int productCost)
+    private Coin[] GetChangeFor(Product product, int amountPaid)
     {
+        var productCost = _productsRepository.GetPriceFor(product);
+
         return _coinTill.Take(amountPaid - productCost);
     }
 
@@ -84,13 +87,20 @@ public class VendingDispenser
             throw new NotSupportedException($"{coin} coins are not supported");
     }
 
-    private void ThrowIfInsufficientFunds(Product product, int requiredAmount)
+    private void ThrowIfInsufficientFundsFor(Product product)
     {
-        if (InsertedAmountInCents < requiredAmount)
-            throw new InsufficientFundsException(
-                $"Insufficient funds for product \"{product}\" - " +
-                $"{CurrencyFormatter.CentsAsCurrency(requiredAmount - InsertedAmountInCents)} required " +
-                $"to satisfy product price of {CurrencyFormatter.CentsAsCurrency(requiredAmount)}"
-            );
+        var productCost = _productsRepository.GetPriceFor(product);
+        if (InsertedAmountInCents >= productCost)
+            return;
+
+        var requiredTopUp = CurrencyFormatter.CentsAsCurrency(
+            productCost - InsertedAmountInCents
+        );
+        var formattedCost = CurrencyFormatter.CentsAsCurrency(productCost);
+
+        throw new InsufficientFundsException(
+            $"Insufficient funds for product \"{product}\" - " +
+            $"{requiredTopUp} required to satisfy product price of {formattedCost}"
+        );
     }
 }

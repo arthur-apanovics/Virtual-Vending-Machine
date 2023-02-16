@@ -41,6 +41,16 @@ public class VendingProductsRepository : IVendingProductsRepository
         _stock.AddRange(items);
     }
 
+    public StockItem? TakeFromStock(Product product)
+    {
+        var item = _stock.FirstOrDefault(si => si.Product == product);
+        if (item is null)
+            return null;
+
+        _stock.Remove(item);
+        return item;
+    }
+
     public int GetPriceFor(Product product)
     {
         if (!_pricing.ContainsKey(product))
@@ -51,5 +61,12 @@ public class VendingProductsRepository : IVendingProductsRepository
             );
 
         return _pricing[product];
+    }
+
+    public bool TryFindItemBy(Guid id, out Product? product)
+    {
+        product = _stock.Find(i => i.Id == id)?.Product;
+
+        return product is not null;
     }
 }
