@@ -1,3 +1,4 @@
+using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachine
 {
@@ -37,12 +40,16 @@ namespace VirtualVendingMachine
             );
             services.AddMediatR(typeof(Startup));
 
-            services
-                .AddScoped<IVendingProductsRepository,
-                    VendingProductsRepository>();
+            services.AddScoped<ICoinTill, CoinTill>();
+            services.AddScoped<IPricingService>(_ => CreatePricingService());
+            services.AddScoped<IVendingProductsRepository>(
+                _ => CreateProductsRepository()
+            );
+            services.AddScoped<IVendingDispenser, VendingDispenser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -64,6 +71,25 @@ namespace VirtualVendingMachine
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private static PricingService CreatePricingService()
+        {
+            return new PricingService(VendingOptions.ProductPricing);
+        }
+
+        private static IVendingProductsRepository CreateProductsRepository()
+        {
+            var productsRepository = new VendingProductsRepository();
+            var initialStock = VendingOptions.InitialStock.SelectMany(
+                kvp => Enumerable.Repeat(
+                    element: StockItem.Create(kvp.Key),
+                    count: kvp.Value
+                )
+            );
+            productsRepository.AddToStock(initialStock);
+
+            return productsRepository;
         }
     }
 }

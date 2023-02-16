@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachine.Requests;
 
 namespace VirtualVendingMachine.Controllers;
 
@@ -9,19 +10,24 @@ namespace VirtualVendingMachine.Controllers;
 [Route("[controller]")]
 public class VendingController : ControllerBase
 {
-    private readonly ILogger _logger;
+    private readonly IMediator _mediator;
+    private readonly ILogger<VendingController> _logger;
 
     public VendingController(
-
-        ILogger logger
+        IMediator mediator,
+        ILogger<VendingController> logger
     )
     {
+        _mediator = mediator;
         _logger = logger;
     }
 
     [HttpGet]
-    public Product Get()
+    public async Task<IActionResult> Get()
     {
-        return Product.Coke;
+        var response =
+            await _mediator.Send(new ListAvailableProductsAndStockRequest());
+
+        return Ok(response);
     }
 }
