@@ -1,7 +1,6 @@
 using System;
-using FluentAssertions;
 using VirtualVendingMachine.Tills;
-using Xunit;
+using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 
@@ -15,7 +14,7 @@ public class AddTests
     public void StoresAcceptedCoins(Coin coin)
     {
         // Arrange
-        var till = new CoinTill(Array.Empty<Coin>());
+        var till = CoinTillBuilder.Build();
 
         // Act
         till.Add(coin);
@@ -28,7 +27,7 @@ public class AddTests
     public void StoresRangeOfAcceptedCoins()
     {
         // Arrange
-        var till = new CoinTill(Array.Empty<Coin>());
+        var till = CoinTillBuilder.Build();
         var coinRange = new[]
         {
             Coin.Create10(),
@@ -55,7 +54,7 @@ public class AddTests
     public void ThrowsWhenStoringUnsupportedCoin()
     {
         // Arrange
-        var till = new CoinTill(Array.Empty<Coin>());
+        var till = CoinTillBuilder.Build();
 
         // Act
         var actual = () => till.Add(Coin.Create(321));

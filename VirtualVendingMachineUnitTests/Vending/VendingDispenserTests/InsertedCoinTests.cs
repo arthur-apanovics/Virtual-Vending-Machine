@@ -1,8 +1,6 @@
 using System;
-using FluentAssertions;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachineUnitTests.Builders;
-using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 

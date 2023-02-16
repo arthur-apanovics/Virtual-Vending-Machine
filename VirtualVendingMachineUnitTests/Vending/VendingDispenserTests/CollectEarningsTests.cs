@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Tills;
@@ -18,7 +17,8 @@ public class CollectEarningsTests
         var dispenser = VendingDispenserBuilder.Build(
             withPricingService: PricingServiceBuilder.Build(
                 TestConstants.Pricing.DefaultPricing
-            )
+            ),
+            withChangeBank: Array.Empty<Coin>()
         );
         var productsToPurchase = new[]
         {
@@ -38,21 +38,21 @@ public class CollectEarningsTests
         foreach (var product in productsToPurchase)
             Purchase(product, dispenser);
 
-        (IEnumerable<Coin> actualEarnings, int _) = dispenser.CollectEarnings();
+        var (actualEarnings, _) = dispenser.CollectEarnings();
 
         // Assert
         actualEarnings.Sum().Should().Be(expectedEarnings);
     }
 
     [Fact]
-    public void RemovesEarningsFromTill()
+    public void RemovesFundsFromTillAfterCollectingEarnings()
     {
         // Arrange
         var dispenser = VendingDispenserBuilder.Build(
             withPricingService: PricingServiceBuilder.Build(
                 TestConstants.Pricing.DefaultPricing
             ),
-            withCoinBank: Array.Empty<Coin>()
+            withChangeBank: Array.Empty<Coin>()
         );
         var productsToPurchase = new[]
         {
@@ -63,7 +63,7 @@ public class CollectEarningsTests
         foreach (var product in productsToPurchase)
             Purchase(product, dispenser);
 
-        (IEnumerable<Coin> _, int fundsInTill) = dispenser.CollectEarnings();
+        var (_, fundsInTill) = dispenser.CollectEarnings();
 
         // Assert
         fundsInTill.Should().Be(0);

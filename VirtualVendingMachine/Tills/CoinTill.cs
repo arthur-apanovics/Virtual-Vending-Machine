@@ -6,19 +6,19 @@ using VirtualVendingMachine.Extensions;
 
 namespace VirtualVendingMachine.Tills;
 
-public class CoinTill
+public interface ICoinTill : ITill<Coin>
+{
+    int CountCoinsFor(int value);
+}
+
+public class CoinTill : ICoinTill
 {
     public int TotalValue => _till.Sum();
 
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
 
-    private List<Coin> _till;
+    private List<Coin> _till = new();
 
-
-    public CoinTill(IEnumerable<Coin> coins)
-    {
-        _till = coins.ToList();
-    }
 
     public int CountCoinsFor(int value) =>
         _till.Count(c => c.ValueInCents == value);
@@ -35,25 +35,6 @@ public class CoinTill
             ValidateAndAddCoinToTill(coin);
 
         SortCoinsInTill();
-    }
-
-    private void ValidateAndAddCoinToTill(Coin coin)
-    {
-        ThrowIfUnsupportedCoin(coin);
-        _till.Add(coin);
-    }
-
-    private void SortCoinsInTill()
-    {
-        _till = _till.OrderByDescending(c => c.ValueInCents).ToList();
-    }
-
-    private static void ThrowIfUnsupportedCoin(Coin coin)
-    {
-        if (!SupportedCoins.Contains(coin.ValueInCents))
-            throw new NotSupportedException(
-                $"{nameof(CoinTill)} does not support {coin} coins"
-            );
     }
 
     public Coin[] Take(int amount)
@@ -81,13 +62,40 @@ public class CoinTill
         foreach (var coin in tillCopy)
         {
             if (result.Sum() == amount)
-                return result.ToArray();
+                break;
 
-            if (coin.ValueInCents < amount)
-                result.Add(TakeCoinFromTill(coin));
+            if (coin.ValueInCents > amount)
+                continue;
+
+            if (result.Sum() + coin.ValueInCents > amount)
+                continue;
+
+            result.Add(TakeCoinFromTill(coin));
         }
 
+        if (result.Sum() == amount)
+            return result.ToArray();
+
         throw new InsufficientFundsInChangeBankException();
+    }
+
+    private void ValidateAndAddCoinToTill(Coin coin)
+    {
+        ThrowIfUnsupportedCoin(coin);
+        _till.Add(coin);
+    }
+
+    private void SortCoinsInTill()
+    {
+        _till = _till.OrderByDescending(c => c.ValueInCents).ToList();
+    }
+
+    private static void ThrowIfUnsupportedCoin(Coin coin)
+    {
+        if (!SupportedCoins.Contains(coin.ValueInCents))
+            throw new NotSupportedException(
+                $"{nameof(CoinTill)} does not support {coin} coins"
+            );
     }
 
     private bool IsSpecificCoinInTill(int value)

@@ -1,6 +1,4 @@
-using FluentAssertions;
 using VirtualVendingMachine.Helpers;
-using Xunit;
 
 namespace VirtualVendingMachineUnitTests.HelpersTests.CurrencyFormatterTests;
 

@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
-using FluentAssertions;
 using VirtualVendingMachine.Tills;
-using Xunit;
+using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 
@@ -27,7 +26,7 @@ public class ConstructorTests
             .ToArray();
 
         // Act
-        var till = new CoinTill(coins);
+        var till = CoinTillBuilder.Build(withCoins: coins);
 
         // Assert
         till.CountCoinsFor(10).Should().Be(expectedTenCentCoins);

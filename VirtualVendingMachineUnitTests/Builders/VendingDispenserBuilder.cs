@@ -10,13 +10,15 @@ public static class VendingDispenserBuilder
     public static VendingDispenser Build(
         IVendingProductsRepository? withProductsRepository = null,
         IPricingService? withPricingService = null,
-        IEnumerable<Coin>? withCoinBank = null
+        ICoinTill? withCoinTill = null,
+        IEnumerable<Coin>? withChangeBank = null
     ) =>
         new(
             withProductsRepository ??
             VendingProductsRepositoryBuilder.BuildWithDefaultStock(),
 
             withPricingService ?? PricingServiceBuilder.Build(),
-            withCoinBank ?? TestConstants.VendingDispenser.DefaultChangeBank
+            withCoinTill ?? CoinTillBuilder.Build(),
+            withChangeBank ?? TestConstants.VendingDispenser.DefaultChangeBank
         );
 }

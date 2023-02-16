@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
-using FluentAssertions;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachineUnitTests.Builders;
-using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 

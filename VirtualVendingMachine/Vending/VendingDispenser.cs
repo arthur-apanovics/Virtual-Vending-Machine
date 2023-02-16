@@ -21,18 +21,23 @@ public class VendingDispenser
 
     private readonly IVendingProductsRepository _productsRepository;
     private readonly IPricingService _pricingService;
-    private readonly CoinTill _coinTill;
+    private readonly ICoinTill _coinTill;
+    private readonly int _changeBankStartAmount;
     private readonly List<Coin> _insertedCoins = new();
 
     public VendingDispenser(
         IVendingProductsRepository productsRepository,
         IPricingService pricingService,
+        ICoinTill coinTill,
         IEnumerable<Coin> changeBank
     )
     {
         _productsRepository = productsRepository;
         _pricingService = pricingService;
-        _coinTill = new CoinTill(changeBank);
+        _coinTill = coinTill;
+        _changeBankStartAmount = _coinTill.TotalValue;
+
+        _coinTill.Add(changeBank);
     }
 
     public ImmutableDictionary<Product, int> ListAvailableProductsAndStock() =>
@@ -66,6 +71,14 @@ public class VendingDispenser
         _insertedCoins.Clear();
 
         return refund;
+    }
+
+    public (IEnumerable<Coin> Earnings, int FundsInTill) CollectEarnings()
+    {
+        var earnings =
+            _coinTill.Take(_coinTill.TotalValue - _changeBankStartAmount);
+
+        return (earnings, _coinTill.TotalValue);
     }
 
     private void TransferInsertedCoinsToTill()

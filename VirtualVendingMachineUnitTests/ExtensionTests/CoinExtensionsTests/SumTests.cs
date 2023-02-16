@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Tills;
-using Xunit;
 
 namespace VirtualVendingMachineUnitTests.ExtensionTests.CoinExtensionsTests;
 

@@ -7,12 +7,18 @@ namespace VirtualVendingMachineUnitTests.Builders;
 
 public static class CoinTillBuilder
 {
-    public static CoinTill Build(IEnumerable<Coin>? withCoins = null) =>
-        new(withCoins ?? Array.Empty<Coin>());
+    public static CoinTill Build(IEnumerable<Coin>? withCoins = null)
+    {
+        var till = new CoinTill();
+        if (withCoins is not null)
+            till.Add(withCoins);
+
+        return till;
+    }
 
     public static CoinTill BuildWithStockedCoinBank() =>
-        new(
-            coins: Array.Empty<Coin>()
+        Build(
+            withCoins: Array.Empty<Coin>()
                 .Concat(Enumerable.Repeat(Coin.Create10(), 50))
                 .Concat(Enumerable.Repeat(Coin.Create20(), 40))
                 .Concat(Enumerable.Repeat(Coin.Create50(), 30))

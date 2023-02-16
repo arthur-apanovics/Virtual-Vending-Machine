@@ -41,7 +41,7 @@ public static class TestConstants
     {
         public static readonly Coin[] DefaultChangeBank = Array.Empty<Coin>()
             .Concat(Enumerable.Repeat(Coin.Create10(), 30))
-            .Concat(Enumerable.Repeat(Coin.Create(15), 20))
+            .Concat(Enumerable.Repeat(Coin.Create20(), 15))
             .ToArray();
     }
 }

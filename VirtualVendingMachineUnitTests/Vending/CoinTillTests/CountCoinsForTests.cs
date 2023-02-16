@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using VirtualVendingMachine.Tills;
-using Xunit;
+using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.CoinTillTests;
 
@@ -18,7 +17,7 @@ public class CountCoinsForTests
     )
     {
         // Arrange
-        var till = new CoinTill(coins);
+        var till = CoinTillBuilder.Build(withCoins: coins);
 
         // Act
         var actual = till.CountCoinsFor(coinValue);
@@ -29,12 +28,7 @@ public class CountCoinsForTests
 
     public static IEnumerable<object[]> CoinBankTestDataProvider()
     {
-        yield return new object[]
-        {
-            10,
-            Array.Empty<Coin>(),
-            0,
-        };
+        yield return new object[] { 10, Array.Empty<Coin>(), 0, };
 
         var rnd = new Random();
 
@@ -45,7 +39,8 @@ public class CountCoinsForTests
             yield return new object[]
             {
                 coinValue,
-                Enumerable.Repeat(Coin.Create(coinValue), coinQty).ToArray(),
+                Enumerable.Repeat(Coin.Create(coinValue), coinQty)
+                    .ToArray(),
                 coinQty,
             };
         }
