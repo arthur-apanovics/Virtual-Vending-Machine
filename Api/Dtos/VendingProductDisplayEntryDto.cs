@@ -1,6 +1,6 @@
 namespace VirtualVendingMachine.Dtos;
 
-public record VendingProductDisplayEntry(
+public record VendingProductDisplayEntryDto(
     string ProductName,
     string ProductPrice,
     int AvailableQuantity

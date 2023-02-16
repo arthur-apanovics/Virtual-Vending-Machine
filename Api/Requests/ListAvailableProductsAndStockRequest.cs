@@ -11,10 +11,10 @@ namespace VirtualVendingMachine.Requests;
 
 public class
     ListAvailableProductsAndStockRequest : IRequest<
-        IEnumerable<VendingProductDisplayEntry>>
+        IEnumerable<VendingProductDisplayEntryDto>>
 {
     public class Handler : IRequestHandler<ListAvailableProductsAndStockRequest,
-        IEnumerable<VendingProductDisplayEntry>>
+        IEnumerable<VendingProductDisplayEntryDto>>
     {
         private readonly IVendingDispenser _dispenser;
         private readonly IPricingService _pricingService;
@@ -28,27 +28,27 @@ public class
             _pricingService = pricingService;
         }
 
-        public async Task<IEnumerable<VendingProductDisplayEntry>> Handle(
+        public Task<IEnumerable<VendingProductDisplayEntryDto>> Handle(
             ListAvailableProductsAndStockRequest request,
             CancellationToken cancellationToken
         )
         {
-            return await Task.Run(
+            return Task.Run(
                 GetListOfAvailableVendingEntries,
                 cancellationToken
             );
         }
 
-        private List<VendingProductDisplayEntry>
+        private IEnumerable<VendingProductDisplayEntryDto>
             GetListOfAvailableVendingEntries()
         {
-            var result = new List<VendingProductDisplayEntry>();
+            var result = new List<VendingProductDisplayEntryDto>();
             var productStock = _dispenser.ListAvailableProductsAndStock();
 
             foreach (var (product, qty) in productStock)
             {
                 result.Add(
-                    new VendingProductDisplayEntry(
+                    new VendingProductDisplayEntryDto(
                         product.Name,
                         ProductPrice: GetFormattedProductPrice(product),
                         AvailableQuantity: qty
