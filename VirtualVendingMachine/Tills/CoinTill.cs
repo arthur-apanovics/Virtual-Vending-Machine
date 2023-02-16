@@ -13,10 +13,14 @@ public class CoinTill : ICoinTill
 {
     public int TotalValue => _till.Sum();
 
-    private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
+    private readonly Coin[] _supportedCoins;
 
     private List<Coin> _till = new();
 
+    public CoinTill(IEnumerable<Coin> supportedCoins)
+    {
+        _supportedCoins = supportedCoins.ToArray();
+    }
 
     public int CountCoinsFor(int value) =>
         _till.Count(c => c.ValueInCents == value);
@@ -107,23 +111,23 @@ public class CoinTill : ICoinTill
         return coin;
     }
 
-    private static void ThrowIfUnsupportedCoin(Coin coin)
+    private void ThrowIfUnsupportedCoin(Coin coin)
     {
-        if (!SupportedCoins.Contains(coin.ValueInCents))
+        if (!_supportedCoins.Contains(coin))
             throw new NotSupportedCoinException(coin);
     }
 
-    private static void ThrowIfInvalidAmountToTake(int amount)
+    private void ThrowIfInvalidAmountToTake(int amount)
     {
         if (amount < 0)
             throw new ArgumentException(
                 "Cannot take negative amounts from till"
             );
 
-        if (amount > 0 && amount < SupportedCoins.Min())
+        if (amount > 0 && amount < _supportedCoins.Min(c => c.ValueInCents))
             throw new ArgumentException(
                 $"Cannot take {amount} from till - " +
-                $"smallest denominator supported is {SupportedCoins.Min()}"
+                $"smallest denominator supported is {_supportedCoins.Min()}"
             );
     }
 }

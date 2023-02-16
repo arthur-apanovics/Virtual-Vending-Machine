@@ -33,7 +33,7 @@ public class TakeTests
     public void RemovesCoinFromTillAfterTaking()
     {
         // Arrange
-        var till = CoinTillBuilder.Build(new[] { Coin.Create50() });
+        var till = CoinTillBuilder.Build(withCoins: new[] { Coin.Create50() });
 
         // Act
         till.Take(50);
@@ -60,10 +60,11 @@ public class TakeTests
     {
         // Arrange
         var till = CoinTillBuilder.Build();
-        var tinyCoin = TestConstants.CoinTill.AcceptedCoinValues.Min() / 2;
+        var amountToTake =
+            TestConstants.CoinTill.SupportedCoins.Min(c => c.ValueInCents) / 2;
 
         // Act
-        var actual = () => till.Take(tinyCoin);
+        var actual = () => till.Take(amountToTake);
 
         // Assert
         actual.Should().ThrowExactly<ArgumentException>();
@@ -73,7 +74,7 @@ public class TakeTests
     public void ThrowsExceptionIfNotEnoughCoins()
     {
         // Arrange
-        var till = CoinTillBuilder.Build(new[] { Coin.Create10() });
+        var till = CoinTillBuilder.Build(withCoins: new[] { Coin.Create10() });
 
         // Act
         var actual = () => till.Take(50);

@@ -10,6 +10,7 @@ namespace VirtualVendingMachine.Vending;
 
 public interface IVendingDispenser
 {
+    IEnumerable<Coin> AcceptedCoins { get; }
     ImmutableArray<Coin> InsertedCoins { get; }
     int InsertedAmountInCents { get; }
     ImmutableDictionary<Product, int> ListAvailableProductsAndStock();
@@ -23,16 +24,24 @@ public interface IVendingDispenser
 
 public class VendingDispenser : IVendingDispenser
 {
+    public IEnumerable<Coin> AcceptedCoins { get; }
+
     public ImmutableArray<Coin> InsertedCoins =>
         _insertedCoins.ToImmutableArray();
 
     public int InsertedAmountInCents => _insertedCoins.Sum();
 
-    private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
+    // Usually these values would come from options,
+    // hard-coding due to time-constrains
+    private static readonly int[] DefaultSupportedCoinValues =
+    {
+        10, 20, 50, 100, 200
+    };
 
     private readonly IVendingProductsRepository _productsRepository;
     private readonly IPricingService _pricingService;
     private readonly ICoinTill _coinTill;
+
     private readonly int _changeBankStartAmount;
     private readonly List<Coin> _insertedCoins = new();
 
@@ -46,6 +55,8 @@ public class VendingDispenser : IVendingDispenser
         _productsRepository = productsRepository;
         _pricingService = pricingService;
         _coinTill = coinTill;
+
+        AcceptedCoins = CalculateSupportedCoins();
         _changeBankStartAmount = _coinTill.TotalValue;
 
         _coinTill.Add(changeBank);
@@ -99,6 +110,13 @@ public class VendingDispenser : IVendingDispenser
         _coinTill.Add(coins);
     }
 
+    private Coin[] CalculateSupportedCoins()
+    {
+        return _coinTill.ListSupportedFundDenominators()
+            .Intersect(DefaultSupportedCoinValues.Select(Coin.Create))
+            .ToArray();
+    }
+
     private void TransferInsertedCoinsToTill()
     {
         _coinTill.Add(_insertedCoins);
@@ -112,9 +130,9 @@ public class VendingDispenser : IVendingDispenser
         return _coinTill.Take(amountPaid - productCost);
     }
 
-    private static void ThrowIfUnsupportedCoin(Coin coin)
+    private void ThrowIfUnsupportedCoin(Coin coin)
     {
-        if (!SupportedCoins.Contains(coin.ValueInCents))
+        if (!AcceptedCoins.Contains(coin))
             throw new NotSupportedCoinException(coin);
     }
 

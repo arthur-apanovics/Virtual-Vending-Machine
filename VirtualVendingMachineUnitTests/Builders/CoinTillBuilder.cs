@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Tills.Models;
+using VirtualVendingMachineUnitTests.Vending;
 
 namespace VirtualVendingMachineUnitTests.Builders;
 
 public static class CoinTillBuilder
 {
-    public static CoinTill Build(IEnumerable<Coin>? withCoins = null)
+    public static CoinTill Build(
+        IEnumerable<Coin>? withSupportedCoins = null,
+        IEnumerable<Coin>? withCoins = null
+    )
     {
-        var till = new CoinTill();
+        var till = new CoinTill(
+            withSupportedCoins ??
+            TestConstants.CoinTill.SupportedCoins
+        );
+
         if (withCoins is not null)
             till.Add(withCoins);
 

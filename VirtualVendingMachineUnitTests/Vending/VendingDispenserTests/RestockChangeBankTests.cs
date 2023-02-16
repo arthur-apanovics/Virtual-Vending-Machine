@@ -11,7 +11,7 @@ public class RestockChangeBankTests
     public void AddsProvidedFundsToChangeBank()
     {
         // Arrange
-        var coinTill = CoinTillBuilder.Build(Array.Empty<Coin>());
+        var coinTill = CoinTillBuilder.Build(withCoins: Array.Empty<Coin>());
         var dispenser = VendingDispenserBuilder.Build(
             withCoinTill: coinTill,
             withChangeBank: Array.Empty<Coin>()

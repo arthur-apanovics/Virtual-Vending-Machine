@@ -48,7 +48,7 @@ public class CollectEarningsTests
     public void RemovesFundsFromTillAfterCollectingEarnings()
     {
         // Arrange
-        var coinTill = CoinTillBuilder.Build(Array.Empty<Coin>());
+        var coinTill = CoinTillBuilder.Build(withCoins: Array.Empty<Coin>());
         var dispenser = VendingDispenserBuilder.Build(
             withPricingService: PricingServiceBuilder.Build(
                 TestConstants.Pricing.DefaultPricing

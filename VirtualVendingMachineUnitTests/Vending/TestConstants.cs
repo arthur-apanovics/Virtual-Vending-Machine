@@ -31,9 +31,13 @@ public static class TestConstants
 
     public static class CoinTill
     {
-        public static readonly int[] AcceptedCoinValues =
+        public static readonly Coin[] SupportedCoins =
         {
-            10, 20, 50, 100, 200
+            Coin.Create10(),
+            Coin.Create20(),
+            Coin.Create50(),
+            Coin.Create100(),
+            Coin.Create200(),
         };
     }
 
