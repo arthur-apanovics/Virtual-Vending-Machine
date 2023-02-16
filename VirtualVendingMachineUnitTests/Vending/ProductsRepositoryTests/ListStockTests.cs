@@ -1,6 +1,6 @@
-using FluentAssertions;
-using VirtualVendingMachine.Vending;
-using Xunit;
+using System.Collections.Generic;
+using VirtualVendingMachine.Vending.Models;
+using VirtualVendingMachineUnitTests.Builders;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
@@ -10,21 +10,22 @@ public class ListStockTests
     public void ReturnsExpectedAvailableProducts()
     {
         // Arrange
-        var repository = new VendingProductsRepository();
+        var repository =
+            VendingProductsRepositoryBuilder.BuildWithDefaultStock();
+        var expectedProductsAndQuantity = new Dictionary<Product, int>
+        {
+            { Product.Coke, TestConstants.Stock.CokeDefaultStockQty },
+            { Product.Juice, TestConstants.Stock.JuiceDefaultStockQty },
+            {
+                Product.ChocolateBar,
+                TestConstants.Stock.ChocolateBarDefaultStockQty
+            },
+        };
 
         // Act
         var actual = repository.ListStock();
 
         // Assert
-        var expectedProductsAndQuantity = new[]
-        {
-            (VendingProduct.Coke, TestConstants.Stock.CokeDefaultStockQty),
-            (VendingProduct.Juice,
-                TestConstants.Stock.JuiceDefaultStockQty),
-            (VendingProduct.ChocolateBar,
-                TestConstants.Stock.ChocolateBarDefaultStockQty),
-        };
-
         actual.Should().BeEquivalentTo(expectedProductsAndQuantity);
     }
 }

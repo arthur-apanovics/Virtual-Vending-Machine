@@ -1,16 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using VirtualVendingMachine.Tills;
-using VirtualVendingMachine.Vending;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending;
 
 public static class TestDataProviders
 {
     public static IEnumerable<object[]> VendingProducts() =>
-        Enum.GetValues<VendingProduct>()
-            .Select(product => new object[] { product });
+        Product.AllProducts.Select(p => new[] { p });
 
     public static IEnumerable<object[]> AcceptedCoins() =>
         TestConstants.CoinTill.AcceptedCoinValues.Select(

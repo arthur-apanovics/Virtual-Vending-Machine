@@ -1,6 +1,5 @@
-using FluentAssertions;
 using VirtualVendingMachine.Vending;
-using Xunit;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
@@ -11,7 +10,7 @@ public class GetStockForTests
         nameof(TestDataProviders.VendingProducts),
         MemberType = typeof(TestDataProviders)
     )]
-    public void ReturnsPositiveValue(VendingProduct product)
+    public void ReturnsPositiveValue(Product product)
     {
         // Arrange
         var repository = new VendingProductsRepository();

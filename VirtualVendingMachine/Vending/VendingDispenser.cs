@@ -6,6 +6,7 @@ using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Helpers;
 using VirtualVendingMachine.Tills;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachine.Vending;
 
@@ -13,6 +14,7 @@ public class VendingDispenser
 {
     public ImmutableArray<Coin> InsertedCoins =>
         _insertedCoins.ToImmutableArray();
+
     public int InsertedAmountInCents => _insertedCoins.Sum();
 
     private static readonly int[] SupportedCoins = { 10, 20, 50, 100, 200 };
@@ -38,7 +40,7 @@ public class VendingDispenser
         _insertedCoins.Add(coin);
     }
 
-    public DispenseResult Dispense(VendingProduct product)
+    public DispenseResult Dispense(Product product)
     {
         var productCost = _productsRepository.GetPriceFor(product);
         ThrowIfInsufficientFunds(product, productCost);
@@ -47,7 +49,11 @@ public class VendingDispenser
         TransferInsertedCoinsToTill();
         var change = RetrieveChange(amountPaid, productCost);
 
-        return new DispenseResult(product.ToString(), productCost, change.Sum());
+        return new DispenseResult(
+            product.ToString(),
+            productCost,
+            change.Sum()
+        );
     }
 
     public IEnumerable<Coin> CancelAndRefund()
@@ -75,10 +81,7 @@ public class VendingDispenser
             throw new NotSupportedException($"{coin} coins are not supported");
     }
 
-    private void ThrowIfInsufficientFunds(
-        VendingProduct product,
-        int requiredAmount
-    )
+    private void ThrowIfInsufficientFunds(Product product, int requiredAmount)
     {
         if (InsertedAmountInCents < requiredAmount)
             throw new InsufficientFundsException(

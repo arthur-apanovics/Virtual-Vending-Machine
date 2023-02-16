@@ -1,10 +1,9 @@
-using FluentAssertions;
 using NSubstitute;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Tills;
 using VirtualVendingMachine.Vending;
+using VirtualVendingMachine.Vending.Models;
 using VirtualVendingMachineUnitTests.Builders;
-using Xunit;
 
 namespace VirtualVendingMachineUnitTests.Vending.VendingDispenserTests;
 
@@ -12,13 +11,13 @@ public class DispenseTests
 {
     private readonly IVendingProductsRepository _productsRepository;
 
-    private const VendingProduct ProductUnderTest = VendingProduct.Coke;
+    private readonly Product _productUnderTest = Product.Coke;
     private const int PriceForProductUnderTest = TestConstants.Pricing.Coke;
 
     public DispenseTests()
     {
         _productsRepository = Substitute.For<IVendingProductsRepository>();
-        _productsRepository.GetPriceFor(ProductUnderTest)
+        _productsRepository.GetPriceFor(_productUnderTest)
             .Returns(PriceForProductUnderTest);
     }
 
@@ -28,7 +27,7 @@ public class DispenseTests
         // Arrange
         var dispenser = VendingDispenserBuilder.Build(_productsRepository);
         var expectedResult = new DispenseResult(
-            ProductUnderTest.ToString(),
+            _productUnderTest.ToString(),
             PriceForProductUnderTest,
             Change: 0
         );
@@ -37,7 +36,7 @@ public class DispenseTests
         FillCoinHolderWIthRequiredAmount(dispenser);
 
         // Assert
-        dispenser.Dispense(ProductUnderTest)
+        dispenser.Dispense(_productUnderTest)
             .Should()
             .BeEquivalentTo(expectedResult);
     }
@@ -50,7 +49,7 @@ public class DispenseTests
 
         // Act
         FillCoinHolderWIthRequiredAmount(dispenser);
-        dispenser.Dispense(ProductUnderTest);
+        dispenser.Dispense(_productUnderTest);
 
         // Assert
         dispenser.InsertedCoins.Should().BeEmpty();
@@ -68,7 +67,7 @@ public class DispenseTests
         // Act
         FillCoinHolderWIthRequiredAmount(dispenser);
         dispenser.InsertCoin(Coin.Create(overfillAmount));
-        var result = dispenser.Dispense(ProductUnderTest);
+        var result = dispenser.Dispense(_productUnderTest);
 
         // Assert
         result.Change.Should().Be(overfillAmount);
@@ -93,7 +92,7 @@ public class DispenseTests
         var actual = () =>
         {
             dispenser.InsertCoin(insertedCoin);
-            dispenser.Dispense(ProductUnderTest);
+            dispenser.Dispense(_productUnderTest);
         };
 
         // Assert

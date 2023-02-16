@@ -1,10 +1,11 @@
-using System.Collections.Generic;
+using System.Collections.Immutable;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachine.Vending;
 
 public interface IVendingProductsRepository
 {
-    IEnumerable<(VendingProduct product, int quantity)> ListStock();
-    int GetStockFor(VendingProduct product);
-    int GetPriceFor(VendingProduct product);
+    ImmutableDictionary<Product, int> ListStock();
+    int GetStockFor(Product product);
+    int GetPriceFor(Product product);
 }

@@ -1,20 +1,15 @@
-using FluentAssertions;
+using System.Collections.Generic;
 using VirtualVendingMachine.Vending;
-using Xunit;
+using VirtualVendingMachine.Vending.Models;
 
 namespace VirtualVendingMachineUnitTests.Vending.ProductsRepositoryTests;
 
 public class GetPriceForTests
 {
     [Theory]
-    [InlineData(VendingProduct.Coke, TestConstants.Pricing.Coke)]
-    [InlineData(VendingProduct.Juice, TestConstants.Pricing.Juice)]
-    [InlineData(
-        VendingProduct.ChocolateBar,
-        TestConstants.Pricing.ChocolateBar
-    )]
+    [MemberData(nameof(ProductPricingProvider))]
     public void ReturnsExpectedPriceForProduct(
-        VendingProduct product,
+        Product product,
         int expectedPrice
     )
     {
@@ -33,7 +28,7 @@ public class GetPriceForTests
         nameof(TestDataProviders.VendingProducts),
         MemberType = typeof(TestDataProviders)
     )]
-    public void HasPriceForAllProducts(VendingProduct product)
+    public void HasPriceForAllProducts(Product product)
     {
         // Arrange
         var repository = new VendingProductsRepository();
@@ -43,5 +38,18 @@ public class GetPriceForTests
 
         // Assert
         actual.Should().BePositive();
+    }
+
+    public static IEnumerable<object[]> ProductPricingProvider()
+    {
+        yield return new object[] { Product.Coke, TestConstants.Pricing.Coke };
+        yield return new object[]
+        {
+            Product.Juice, TestConstants.Pricing.Juice
+        };
+        yield return new object[]
+        {
+            Product.ChocolateBar, TestConstants.Pricing.ChocolateBar
+        };
     }
 }
