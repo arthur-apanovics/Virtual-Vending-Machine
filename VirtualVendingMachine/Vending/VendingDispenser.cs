@@ -33,6 +33,9 @@ public class VendingDispenser
         _coinTill = new CoinTill(changeBank);
     }
 
+    public ImmutableDictionary<Product, int> ListAvailableProductsAndStock() =>
+        _productsRepository.ListStock();
+
     public void InsertCoin(Coin coin)
     {
         ThrowIfUnsupportedCoin(coin);
