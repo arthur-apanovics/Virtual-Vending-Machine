@@ -1,3 +1,4 @@
+using System;
 using VirtualVendingMachine.Exceptions;
 using VirtualVendingMachine.Extensions;
 using VirtualVendingMachine.Tills;
@@ -59,6 +60,24 @@ public class DispenseTests
 
         // Assert
         result.Change.Sum().Should().Be(overfillAmount);
+    }
+
+    [Fact]
+    public void ThrowsWhenProductNotInStock()
+    {
+        // Arrange
+        var dispenser = VendingDispenserBuilder.Build(
+            withProductsRepository: VendingProductsRepositoryBuilder.Build(
+                withStockItems: Array.Empty<StockItem>()
+            )
+        );
+
+        // Act
+        InsertRequiredFunds(dispenser);
+        var actual = () => dispenser.Dispense(Product.Coke);
+
+        // Assert
+        actual.Should().ThrowExactly<ProductOutOfStockException>();
     }
 
     [Fact]

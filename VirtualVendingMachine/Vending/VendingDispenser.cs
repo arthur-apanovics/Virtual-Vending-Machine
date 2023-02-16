@@ -43,13 +43,12 @@ public class VendingDispenser
         _insertedCoins.Add(coin);
     }
 
-    // TODO: TryDispense
     public (StockItem Item, IEnumerable<Coin> Change) Dispense(
         Product product
     )
     {
         ThrowIfInsufficientFundsFor(product);
-        // TODO: throw if not in stock
+        ThrowIfProductNotInStock(product);
 
         var amountPaid = InsertedAmountInCents;
         TransferInsertedCoinsToTill();
@@ -57,7 +56,8 @@ public class VendingDispenser
         var change = GetChangeFor(product, amountPaid);
         var item = _productsRepository.TakeFromStock(product);
 
-        return (item!, change); // TODO: handle null
+        // nullability suppressed because we already checked that item is in stock
+        return (item!, change);
     }
 
     public IEnumerable<Coin> CancelAndRefund()
@@ -102,5 +102,11 @@ public class VendingDispenser
             $"Insufficient funds for product \"{product}\" - " +
             $"{requiredTopUp} required to satisfy product price of {formattedCost}"
         );
+    }
+
+    private void ThrowIfProductNotInStock(Product product)
+    {
+        if (_productsRepository.GetStockFor(product) == 0)
+            throw new ProductOutOfStockException();
     }
 }
