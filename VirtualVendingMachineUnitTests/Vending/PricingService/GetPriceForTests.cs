@@ -42,15 +42,7 @@ public class GetPriceForTests
 
     public static IEnumerable<object[]> ProductPricingProvider()
     {
-        yield return new object[] { Product.Coke, TestConstants.Pricing.Coke };
-        yield return new object[]
-        {
-            Product.Juice, TestConstants.Pricing.Juice
-        };
-        yield return new object[]
-        {
-            Product.ChocolateBar, TestConstants.Pricing.ChocolateBar
-        };
+        foreach (var (product, price) in TestConstants.Pricing.DefaultPricing)
+            yield return new object[] { product, price };
     }
-
 }
