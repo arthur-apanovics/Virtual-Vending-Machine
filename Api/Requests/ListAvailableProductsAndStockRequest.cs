@@ -34,27 +34,29 @@ public class
         )
         {
             return await Task.Run(
-                () =>
-                {
-                    var productStock =
-                        _dispenser.ListAvailableProductsAndStock();
-                    var result = new List<VendingProductDisplayEntry>();
-
-                    foreach (var (product, qty) in productStock)
-                    {
-                        result.Add(
-                            new VendingProductDisplayEntry(
-                                product.Name,
-                                GetFormattedProductPrice(product),
-                                qty
-                            )
-                        );
-                    }
-
-                    return result;
-                },
+                GetListOfAvailableVendingEntries,
                 cancellationToken
             );
+        }
+
+        private List<VendingProductDisplayEntry>
+            GetListOfAvailableVendingEntries()
+        {
+            var result = new List<VendingProductDisplayEntry>();
+            var productStock = _dispenser.ListAvailableProductsAndStock();
+
+            foreach (var (product, qty) in productStock)
+            {
+                result.Add(
+                    new VendingProductDisplayEntry(
+                        product.Name,
+                        ProductPrice: GetFormattedProductPrice(product),
+                        AvailableQuantity: qty
+                    )
+                );
+            }
+
+            return result;
         }
 
         private string GetFormattedProductPrice(Product product)
