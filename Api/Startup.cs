@@ -45,12 +45,12 @@ namespace VirtualVendingMachine
 
             services.AddMediatR(typeof(Startup));
 
-            services.AddScoped<ICoinTill>(_ => CreateCoinTill());
-            services.AddScoped<IPricingService>(_ => CreatePricingService());
-            services.AddScoped<IVendingProductsRepository>(
+            services.AddTransient<ICoinTill>(_ => CreateCoinTill());
+            services.AddTransient<IPricingService>(_ => CreatePricingService());
+            services.AddTransient<IVendingProductsRepository>(
                 _ => CreateProductsRepository()
             );
-            services.AddScoped<IVendingDispenser, VendingDispenser>();
+            services.AddSingleton<IVendingDispenser, VendingDispenser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
