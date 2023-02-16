@@ -30,4 +30,14 @@ public class VendingController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> InsertCoin(
+        [FromBody] InsertCoinRequest request
+    )
+    {
+        var response = await _mediator.Send(request);
+
+        return Ok(response);
+    }
 }
