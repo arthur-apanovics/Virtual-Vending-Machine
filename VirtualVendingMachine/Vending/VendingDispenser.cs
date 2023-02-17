@@ -74,6 +74,7 @@ public class VendingDispenser : IVendingDispenser
 
     public (StockItem Item, IEnumerable<Coin> Change) Dispense(Product product)
     {
+        ThrowIfUnknownProduct(product);
         ThrowIfInsufficientFundsFor(product);
         ThrowIfProductNotInStock(product);
 
@@ -134,6 +135,13 @@ public class VendingDispenser : IVendingDispenser
     {
         if (!AcceptedCoins.Contains(coin))
             throw new NotSupportedCoinException(coin);
+    }
+
+    private void ThrowIfUnknownProduct(Product productInQuestion)
+    {
+        // TODO: Delegate this check to product repository
+        if (!Product.AllProducts.Contains(productInQuestion))
+            throw new NotKnownProductException(productInQuestion);
     }
 
     private void ThrowIfInsufficientFundsFor(Product product)

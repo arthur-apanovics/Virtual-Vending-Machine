@@ -85,6 +85,27 @@ public class DispenseTests
     }
 
     [Fact]
+    public void ThrowsWhenAttemptingToDispenseUnknownProduct()
+    {
+        // Arrange
+        var dispenser = VendingDispenserBuilder.Build(
+            withProductsRepository: VendingProductsRepositoryBuilder
+                .BuildWithDefaultStock()
+        );
+        var unknownProduct = Product.Create("Pepsi");
+
+        // Act
+        TestHelpers.InsertRequiredFundsFor(Product.Coke, dispenser);
+        var actual = () => dispenser.Dispense(unknownProduct);
+
+        // Assert
+        actual.Should()
+            .ThrowExactly<NotKnownProductException>()
+            .And.UnknownProduct.Should()
+            .Be(unknownProduct);
+    }
+
+    [Fact]
     public void ThrowsWhenAttemptingToDispenseWithInsufficientFunds()
     {
         // Arrange
