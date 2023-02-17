@@ -26,7 +26,11 @@ namespace VirtualVendingMachine
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(
-                config => config.Filters.Add<NotSupportedCoinExceptionFilter>()
+                config =>
+                {
+                    config.Filters.Add<NotSupportedCoinExceptionFilter>();
+                    config.Filters.Add<InsufficientFundsExceptionFilter>();
+                }
             );
 
             services.AddSwaggerGen(
