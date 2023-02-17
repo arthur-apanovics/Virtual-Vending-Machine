@@ -47,7 +47,7 @@ public class VendingController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("insert-coin")]
+    [HttpPut("insert-coin")]
     public async Task<IActionResult> InsertCoin(
         [FromBody] InsertCoinRequest request
     )
