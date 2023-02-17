@@ -30,7 +30,8 @@ namespace VirtualVendingMachine
                 {
                     config.Filters.Add<NotSupportedCoinExceptionFilter>();
                     config.Filters.Add<InsufficientFundsExceptionFilter>();
-                    config.Filters.Add<InsufficientFundsInChangeBankExceptionFilter>();
+                    config.Filters
+                        .Add<InsufficientFundsInChangeBankExceptionFilter>();
                     config.Filters.Add<NotKnownProductExceptionFilter>();
                     config.Filters.Add<ProductOutOfStockExceptionFilter>();
                 }
@@ -52,16 +53,10 @@ namespace VirtualVendingMachine
 
             services.AddMediatR(typeof(Startup));
 
-            services.AddTransient<ICoinTill>(_ => CreateCoinTill());
-            services.AddTransient<IPricingService>(_ => CreatePricingService());
-            services.AddTransient<IVendingProductsRepository>(
-                _ => CreateProductsRepository()
-            );
-            services.AddSingleton<IVendingDispenser, VendingDispenser>();
+            RegisterVendingMachineServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -83,6 +78,27 @@ namespace VirtualVendingMachine
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private IServiceCollection RegisterVendingMachineServices(IServiceCollection services)
+        {
+            var coinTill = CreateCoinTill();
+            var pricingService = CreatePricingService();
+            var productsRepository = CreateProductsRepository();
+            var vendingDispenser = CreateVendingDispenser(
+                productsRepository,
+                pricingService,
+                coinTill
+            );
+
+            services.AddTransient<ICoinTill>(_ => coinTill);
+            services.AddTransient<IPricingService>(_ => pricingService);
+            services.AddTransient<IVendingProductsRepository>(
+                _ => productsRepository
+            );
+            services.AddSingleton<IVendingDispenser>(_ => vendingDispenser);
+
+            return services;
         }
 
         private static ICoinTill CreateCoinTill()
@@ -107,6 +123,20 @@ namespace VirtualVendingMachine
             productsRepository.AddToStock(initialStock);
 
             return productsRepository;
+        }
+
+        private IVendingDispenser CreateVendingDispenser(
+            IVendingProductsRepository productsRepository,
+            IPricingService pricingService,
+            ICoinTill coinTill
+        )
+        {
+            return new VendingDispenser(
+                productsRepository,
+                pricingService,
+                coinTill,
+                changeBank: VendingOptions.ChangeBank
+            );
         }
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtualVendingMachine.Tills.Models;
 using VirtualVendingMachine.Vending.Models;
 
@@ -28,4 +30,9 @@ public class VendingOptions
         Coin.Create100(),
         Coin.Create200(),
     };
+
+    public static readonly Coin[] ChangeBank = Array.Empty<Coin>()
+        .Concat(Enumerable.Repeat(Coin.Create10(), 30))
+        .Concat(Enumerable.Repeat(Coin.Create20(), 15))
+        .ToArray();
 }
