@@ -142,14 +142,9 @@ public class VendingDispenser : IVendingDispenser
         if (InsertedAmountInCents >= productCost)
             return;
 
-        var requiredTopUp = CurrencyFormatter.CentsAsCurrency(
-            productCost - InsertedAmountInCents
-        );
-        var formattedCost = CurrencyFormatter.CentsAsCurrency(productCost);
-
         throw new InsufficientFundsException(
-            $"Insufficient funds for product \"{product}\" - " +
-            $"{requiredTopUp} required to satisfy product price of {formattedCost}"
+            expectedFunds: productCost,
+            receivedFunds: InsertedAmountInCents
         );
     }
 

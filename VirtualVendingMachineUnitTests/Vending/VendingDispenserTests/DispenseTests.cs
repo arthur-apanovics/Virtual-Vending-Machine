@@ -93,15 +93,8 @@ public class DispenseTests
                 withPricing: TestConstants.Pricing.DefaultPricing
             )
         );
-
-        // hard-coded values to avoid invoking business logic
         var insertedCoin = Coin.Create10();
-        const string expectedProductName = "Coke";
-        const string expectedFullPrice = "$1.80";
-        const string expectedFillAmount = "$1.70";
-        const string expectedMessage =
-            $"Insufficient funds for product \"{expectedProductName}\" - " +
-            $"{expectedFillAmount} required to satisfy product price of {expectedFullPrice}";
+        var productCost = TestConstants.Pricing.DefaultPricing[Product.Coke];
 
         // Act
         var actual = () =>
@@ -113,6 +106,7 @@ public class DispenseTests
         // Assert
         actual.Should()
             .Throw<InsufficientFundsException>()
-            .WithMessage(expectedMessage);
+            .Where(ex => ex.ReceivedFunds == insertedCoin.ValueInCents)
+            .Where(ex => ex.ExpectedFunds == productCost);
     }
 }
