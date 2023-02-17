@@ -152,7 +152,8 @@ public class VendingDispenser : IVendingDispenser
 
         throw new InsufficientFundsException(
             expectedFunds: productCost,
-            receivedFunds: InsertedAmountInCents
+            receivedFunds: InsertedAmountInCents,
+            productName: product.Name
         );
     }
 

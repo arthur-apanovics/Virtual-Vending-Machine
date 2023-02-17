@@ -114,20 +114,23 @@ public class DispenseTests
                 withPricing: TestConstants.Pricing.DefaultPricing
             )
         );
+
+        var product = Product.Coke;
+        var productCost = TestConstants.Pricing.DefaultPricing[product];
         var insertedCoin = Coin.Create10();
-        var productCost = TestConstants.Pricing.DefaultPricing[Product.Coke];
 
         // Act
         var actual = () =>
         {
             dispenser.InsertCoin(insertedCoin);
-            dispenser.Dispense(Product.Coke);
+            dispenser.Dispense(product);
         };
 
         // Assert
         actual.Should()
             .Throw<InsufficientFundsException>()
             .Where(ex => ex.ReceivedFunds == insertedCoin.ValueInCents)
-            .Where(ex => ex.ExpectedFunds == productCost);
+            .Where(ex => ex.ExpectedFunds == productCost)
+            .Where(ex => ex.ProductName == product.Name);
     }
 }
