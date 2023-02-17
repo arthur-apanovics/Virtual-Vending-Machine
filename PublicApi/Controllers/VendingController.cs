@@ -57,6 +57,16 @@ public class VendingController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("purchase")]
+    public async Task<IActionResult> InsertCoin(
+        [FromBody] PurchaseProductRequest request
+    )
+    {
+        var response = await _mediator.Send(request);
+
+        return Ok(response);
+    }
+
     [HttpDelete("cancel-request")]
     public async Task<IActionResult> CancelAndRefund()
     {
