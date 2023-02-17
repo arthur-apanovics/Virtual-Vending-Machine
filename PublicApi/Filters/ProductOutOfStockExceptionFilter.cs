@@ -18,7 +18,7 @@ public class ProductOutOfStockExceptionFilter : IExceptionFilter
                     "Sorry, this machine is out of stock " +
                     $"for {stockException.ProductOutOfStock.Name}",
                 ContentType = MediaTypeNames.Text.Plain,
-                StatusCode = (int)HttpStatusCode.NoContent
+                StatusCode = (int)HttpStatusCode.ServiceUnavailable
             };
         }
     }

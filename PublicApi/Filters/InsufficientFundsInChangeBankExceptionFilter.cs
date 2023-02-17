@@ -18,7 +18,7 @@ public class InsufficientFundsInChangeBankExceptionFilter : IExceptionFilter
                     "Sorry, there we are unable to provide change for your request. " +
                     "Please request a refund or try purchasing a different product",
                 ContentType = MediaTypeNames.Text.Plain,
-                StatusCode = (int)HttpStatusCode.NoContent
+                StatusCode = (int)HttpStatusCode.ServiceUnavailable
             };
         }
     }
