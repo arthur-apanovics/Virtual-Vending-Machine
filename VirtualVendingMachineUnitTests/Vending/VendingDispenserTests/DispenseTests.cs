@@ -81,7 +81,10 @@ public class DispenseTests
         var actual = () => dispenser.Dispense(Product.Coke);
 
         // Assert
-        actual.Should().ThrowExactly<ProductOutOfStockException>();
+        actual.Should()
+            .ThrowExactly<ProductOutOfStockException>()
+            .And.ProductOutOfStock.Should()
+            .Be(Product.Coke);
     }
 
     [Fact]

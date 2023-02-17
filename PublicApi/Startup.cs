@@ -32,6 +32,7 @@ namespace VirtualVendingMachine
                     config.Filters.Add<InsufficientFundsExceptionFilter>();
                     config.Filters.Add<InsufficientFundsInChangeBankExceptionFilter>();
                     config.Filters.Add<NotKnownProductExceptionFilter>();
+                    config.Filters.Add<ProductOutOfStockExceptionFilter>();
                 }
             );
 
