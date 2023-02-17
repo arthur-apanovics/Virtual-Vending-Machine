@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{803A4326-55A4-4594-9401-339D249BB725}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicApi", "PublicApi\PublicApi.csproj", "{803A4326-55A4-4594-9401-339D249BB725}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualVendingMachineUnitTests", "VirtualVendingMachineUnitTests\VirtualVendingMachineUnitTests.csproj", "{6CB9F675-6EC0-4921-954E-370FCF40B0C7}"
 EndProject
