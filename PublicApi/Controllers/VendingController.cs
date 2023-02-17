@@ -22,7 +22,7 @@ public class VendingController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet("available-products")]
     public async Task<IActionResult> Index()
     {
         var response =
