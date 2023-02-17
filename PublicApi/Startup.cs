@@ -30,6 +30,7 @@ namespace VirtualVendingMachine
                 {
                     config.Filters.Add<NotSupportedCoinExceptionFilter>();
                     config.Filters.Add<InsufficientFundsExceptionFilter>();
+                    config.Filters.Add<InsufficientFundsInChangeBankExceptionFilter>();
                 }
             );
 
