@@ -39,6 +39,14 @@ public class VendingController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("inserted-funds")]
+    public async Task<IActionResult> GetInsertedFundsAmount()
+    {
+        var response = await _mediator.Send(new GetInsertedFundsRequest());
+
+        return Ok(response);
+    }
+
     [HttpPost("insert-coin")]
     public async Task<IActionResult> InsertCoin(
         [FromBody] InsertCoinRequest request
